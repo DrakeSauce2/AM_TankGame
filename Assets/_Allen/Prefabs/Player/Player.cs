@@ -6,19 +6,21 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     [SerializeField] private float moveSpeed = 10f;
+    [SerializeField] private float maxSpeed;
     [SerializeField] private float turnSpeed;
 
     private Rigidbody rBody;
-    private Camera cam;
 
     private void Awake()
     {
         rBody = GetComponent<Rigidbody>();
-        cam = Camera.main;
+
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Confined;
     }
 
-    private void Update()
-    {
+    private void FixedUpdate()
+    {       
         Move();
     }
 
@@ -28,13 +30,14 @@ public class Player : MonoBehaviour
 
         if (GetInputDirection().z != 0)
         {
-            rBody.AddForce(transform.forward * GetInputDirection().z * speed * Time.deltaTime);
+            rBody.AddForce(transform.forward * Time.deltaTime * GetInputDirection().z * speed);
+            rBody.velocity = Vector3.ClampMagnitude(rBody.velocity, maxSpeed);
         }
 
         if (GetInputDirection().x != 0)
         {
-            transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(
-                new Vector3(Input.GetAxis("Horizontal"), 0, 0), Vector3.up), Time.deltaTime * turnSpeed);
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(
+                transform.right * GetInputDirection().x * turnSpeed, transform.up), 1 * Time.deltaTime);
         }
 
     }
