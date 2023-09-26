@@ -10,18 +10,37 @@ public class Player : MonoBehaviour
     [SerializeField] private float turnSpeed;
 
     private Rigidbody rBody;
+    private Cannon cannon;
 
     private void Awake()
     {
         rBody = GetComponent<Rigidbody>();
+        cannon = GetComponent<Cannon>();
 
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Confined;
     }
 
-    private void FixedUpdate()
+    private void Update()
     {       
         Move();
+
+        FireMainGun();
+    }
+
+    private void FireMainGun()
+    {
+        if (!cannon)
+        {
+            Debug.LogError("Tank Is Missing Cannon Script");
+            return;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Mouse0))
+        {
+            cannon.Shoot();
+        }
+
     }
 
     private void Move()
