@@ -127,7 +127,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mForce: 15000
   mMass: 5
-  mPen: 75
+  mPen: 200
+  mRicochetAngle: 70
+  mDistanceTravelled: 0
 --- !u!135 &7420139376762439181
 SphereCollider:
   m_ObjectHideFlags: 0

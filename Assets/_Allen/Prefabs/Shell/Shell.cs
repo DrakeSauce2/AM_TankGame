@@ -85,7 +85,11 @@ public class Shell : MonoBehaviour
                 Armor armor = collision.gameObject.GetComponent<Armor>();
 
                 float impactAngle = Vector3.Angle(collision.contacts[0].normal, transform.position);
-                float effectiveThickness = armor.thickness / Mathf.Cos(impactAngle);
+                impactAngle -= 180;
+                impactAngle = Mathf.Abs(impactAngle);
+
+                float effectiveThickness = armor.thickness / Mathf.Sin(impactAngle);
+                effectiveThickness = Mathf.Abs(effectiveThickness);
 
                 Debug.Log($"Impact Angle: {impactAngle}");
                 Debug.Log($"Effective Thickness: {effectiveThickness}");
