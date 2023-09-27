@@ -3999,7 +3999,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   barrelEnd: {fileID: 1163823240}
-  shell: {fileID: 7967954056359938758, guid: 183119329489632458c68b7d4733f755, type: 3}
+  shellPrefab: {fileID: 7967954056359938758, guid: 183119329489632458c68b7d4733f755,
+    type: 3}
 --- !u!1 &993166256
 GameObject:
   m_ObjectHideFlags: 0
@@ -5922,6 +5923,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 859ace1f2daa92445b85fd9a3d80311a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mThickness: 0
+  keResistance: 0
+  heResistance: 0
 --- !u!65 &1436655910
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6001,13 +6005,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1436655908}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.5, y: 0, z: 0, w: 0.8660254}
+  m_LocalRotation: {x: -0.258819, y: 0, z: 0, w: 0.9659259}
   m_LocalPosition: {x: 19.27, y: 1.38, z: 57.05}
-  m_LocalScale: {x: 10, y: 5, z: 0.3}
+  m_LocalScale: {x: 10, y: 0.1, z: 3}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 60, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -30, y: 0, z: 0}
 --- !u!1 &1442474179
 GameObject:
   m_ObjectHideFlags: 0
