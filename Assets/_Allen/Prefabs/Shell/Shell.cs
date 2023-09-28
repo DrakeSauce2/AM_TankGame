@@ -17,6 +17,7 @@ public class Shell : MonoBehaviour
 
     private Rigidbody rBody;
     private Vector3 startPos;
+    private Vector3 endPos;
 
     #endregion
 
@@ -70,44 +71,81 @@ public class Shell : MonoBehaviour
     {
         transform.localEulerAngles = velocity;
 
+        endPos = transform.position;
+        mDistanceTravelled = GetDistanceTravelled();
+
         Quaternion targetRotation = Quaternion.LookRotation(velocity, Vector3.up);
         transform.rotation = targetRotation;
     }
+
 
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.collider.CompareTag("Armor"))
         {
-            Debug.Log($"Hit: {collision.collider.gameObject}");
-
             if (collision.gameObject.GetComponent<Armor>())
-            {
-                Armor armor = collision.gameObject.GetComponent<Armor>();
-
-                float impactAngle = Vector3.Angle(collision.contacts[0].normal, transform.position);
-                impactAngle -= 180;
-                impactAngle = Mathf.Abs(impactAngle);
-
-                float effectiveThickness = armor.thickness / Mathf.Sin(impactAngle);
-                effectiveThickness = Mathf.Abs(effectiveThickness);
-
-                Debug.Log($"Impact Angle: {impactAngle}");
-                Debug.Log($"Effective Thickness: {effectiveThickness}");
-
-                if (penetration > effectiveThickness)
-                {
-                    collision.gameObject.GetComponent<Armor>().CalculateDamage(transform, this);
-                }
-                else
-                {
-                    Debug.Log("Deflection!");
-                }
-            }
+                CalculatePenetration(collision);
         }
 
-        
 
         Destroy(gameObject);
     }
+
+    private float GetDistanceTravelled()
+    {
+        return Vector3.Distance(startPos, endPos);
+    }
+
+    #region Calculation Functions
+
+    private bool CalculatePenetration(Collision collision)
+    {
+        Armor armor = collision.gameObject.GetComponent<Armor>();
+
+        float impactAngle = CalculateImpactAngle(collision.contacts[0].normal, transform.position);
+        float effectiveThickness = CalculateArmorThickness(armor, impactAngle);
+
+        Debug.Log($"Impact Angle: {impactAngle}, Effective Thickness: {effectiveThickness}");
+
+        if (impactAngle > mRicochetAngle)
+        {
+            // ricochet the shell and do something
+            Debug.Log("Shell Ricochet!");
+            return false;
+        }
+
+        if (penetration > effectiveThickness)
+        {
+            collision.gameObject.GetComponent<Armor>().CalculateDamage(transform, this);
+            return true;
+        } 
+        
+        //Should try something else instead of doing this
+        return false;
+    }
+
+    private float CalculateImpactAngle(Vector3 from, Vector3 to)
+    {
+        float impactAngle = Vector3.Angle(from, to);
+        impactAngle -= 180;
+        impactAngle = Mathf.Abs(impactAngle);
+
+        return impactAngle;
+    }
+
+    private float CalculateArmorThickness(Armor armor, float impactAngle)
+    {
+        float effectiveThickness = armor.thickness / Mathf.Sin(impactAngle);
+        effectiveThickness = Mathf.Abs(effectiveThickness);
+        
+        return effectiveThickness;
+    }
+
+    private float CalculateFalloff()
+    {
+        return 0;
+    }
+
+    #endregion
 
 }

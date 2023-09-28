@@ -9,8 +9,14 @@ public class Player : MonoBehaviour
     [SerializeField] private float maxSpeed;
     [SerializeField] private float turnSpeed;
 
+    [Space]
+
+    [SerializeField] private Hotbar hotbar;
+
     private Rigidbody rBody;
     private Cannon cannon;
+
+
 
     private void Awake()
     {
@@ -26,6 +32,31 @@ public class Player : MonoBehaviour
         Move();
 
         FireMainGun();
+
+        SwitchAmmo();
+    }
+
+    private void SwitchAmmo()
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            hotbar.SelectSlot(1);
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            hotbar.SelectSlot(2);
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            hotbar.SelectSlot(3);
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha4))
+        {
+            hotbar.SelectSlot(4);
+        }
     }
 
     private void FireMainGun()
