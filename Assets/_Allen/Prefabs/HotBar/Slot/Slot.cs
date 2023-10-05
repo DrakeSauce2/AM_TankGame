@@ -14,8 +14,14 @@ public class Slot : MonoBehaviour
         keyNumText.text = text;
     }
 
-    public void Select() => fade.SetActive(false);
+    public void Select()
+    {
+        fade.SetActive(false);
+    }
 
-    public void Deselect() => fade.SetActive(true);
+    public void Deselect()
+    {
+        fade.SetActive(true);
+    }
 
 }

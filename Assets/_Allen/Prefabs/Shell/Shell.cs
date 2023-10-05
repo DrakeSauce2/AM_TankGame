@@ -14,6 +14,8 @@ public class Shell : MonoBehaviour
     [SerializeField] private float mPen;
     [SerializeField] private float mRicochetAngle;
     [SerializeField] private float mDistanceTravelled;
+    [Space(10)]
+    [SerializeField] private ParticleSystem impactParticle;
 
     private Rigidbody rBody;
     private Vector3 startPos;
@@ -81,8 +83,13 @@ public class Shell : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
+        Vector3 entryPoint = transform.position;
+
+        Instantiate(impactParticle, entryPoint, Quaternion.identity);
+
         if (collision.collider.CompareTag("Armor"))
         {
+
             if (collision.gameObject.GetComponent<Armor>())
                 CalculatePenetration(collision);
         }
@@ -117,6 +124,7 @@ public class Shell : MonoBehaviour
         if (penetration > effectiveThickness)
         {
             collision.gameObject.GetComponent<Armor>().CalculateDamage(transform, this);
+            
             return true;
         } 
         

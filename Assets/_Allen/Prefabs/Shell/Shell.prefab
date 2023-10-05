@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 7582823735638668973}
   - component: {fileID: 8050959182977717926}
   - component: {fileID: 7420139376762439181}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Shell
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -110,9 +110,9 @@ Rigidbody:
   m_ImplicitTensor: 1
   m_UseGravity: 1
   m_IsKinematic: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
 --- !u!114 &8050959182977717926
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -130,8 +130,7 @@ MonoBehaviour:
   mPen: 200
   mRicochetAngle: 70
   mDistanceTravelled: 0
-  impactHole: {fileID: 258802221610461229, guid: f0b5c4c1bc474ee42ad8c60c8a2c5de2,
-    type: 3}
+  impactParticle: {fileID: 19800014, guid: 5332791ebce075d4a9e56f4581e7fb47, type: 3}
 --- !u!135 &7420139376762439181
 SphereCollider:
   m_ObjectHideFlags: 0
