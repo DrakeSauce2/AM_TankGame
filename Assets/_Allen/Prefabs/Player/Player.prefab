@@ -3796,6 +3796,7 @@ GameObject:
   - component: {fileID: 7853939892623531777}
   - component: {fileID: 3363258631918861687}
   - component: {fileID: 1246278469470523093}
+  - component: {fileID: 2621585583751545130}
   - component: {fileID: 8352730130968338755}
   - component: {fileID: 7334984113353902074}
   - component: {fileID: 7495750372103536261}
@@ -3904,6 +3905,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   crossHair: {fileID: 0}
+--- !u!114 &2621585583751545130
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4171891654130184131}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4c10664692abf64ba0941d8a618bc0e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentHealth: 100
+  maxHealth: 100
 --- !u!54 &8352730130968338755
 Rigidbody:
   m_ObjectHideFlags: 0

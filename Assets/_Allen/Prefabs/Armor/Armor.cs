@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.UI.GridLayoutGroup;
 
 public class Armor : MonoBehaviour
 {
@@ -41,6 +42,8 @@ public class Armor : MonoBehaviour
 
     public void CalculateDamage(Transform incomingObject, Shell shell)
     {
-        Debug.Log($"Armor Hit!");
+        ownerHealthComponent.ChangeHealth(-10);
+        //Owner.GetComponent<HealthComponent>().ChangeHealth(-10);
+        Debug.Log("Object Hit");
     }
 }

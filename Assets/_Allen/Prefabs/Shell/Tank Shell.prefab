@@ -159,7 +159,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mForce: 55000
   mMass: 5
-  mPen: 200
+  mPen: 1000
   mRicochetAngle: 70
   mDistanceTravelled: 0
   impactParticle: {fileID: 19800014, guid: 5332791ebce075d4a9e56f4581e7fb47, type: 3}

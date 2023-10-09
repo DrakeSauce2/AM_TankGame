@@ -21,15 +21,12 @@ public class CameraRig : MonoBehaviour
     [Space]
 
     [SerializeField] private float cameraSpeed;
-    [SerializeField] private float headSpeed;
     [SerializeField] private float zoomSpeed;
     private Camera cam;
 
     Vector3 refVel;
     private bool zoom = false;
 
-    float tankLookAngle = 0;
-    float tankPivotAngle = 0;
     float camLookAngle = 0;
     float camPivotAngle = 0;
 
@@ -72,31 +69,6 @@ public class CameraRig : MonoBehaviour
 
         transform.position = targetPosition;
     }
-
-    /*
-    private void RotateTankHead()
-    {
-        Vector3 rotation;
-        Quaternion targetRotation;
-        
-
-        tankLookAngle = tankLookAngle + (MouseInput().x * cameraSpeed);
-        tankPivotAngle = tankPivotAngle - (MouseInput().y * cameraSpeed);
-        tankPivotAngle = Mathf.Clamp(tankPivotAngle, -15, 12);
-
-        rotation = Vector3.zero;
-        rotation.y = tankLookAngle;
-        targetRotation = Quaternion.Euler(rotation);
-        tankHead.rotation = Quaternion.Slerp(tankHead.rotation, targetRotation, Time.deltaTime * headSpeed);
-        //tankHead.localEulerAngles = Vector3.SmoothDamp(tankHead.localEulerAngles, targetRotation.eulerAngles, ref refVel, headSpeed);
-
-        rotation = Vector3.zero;
-        rotation.x = tankPivotAngle;
-        targetRotation = Quaternion.Euler(rotation);
-        tankBarrel.localRotation = targetRotation; 
-
-    }
-    */
 
     Vector3 lookAtPoint;
     private void RotateTankHead()

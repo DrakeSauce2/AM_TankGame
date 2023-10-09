@@ -114,6 +114,7 @@ public class Shell : MonoBehaviour
 
         Debug.Log($"Impact Angle: {impactAngle}, Effective Thickness: {effectiveThickness}");
 
+        
         if (impactAngle > mRicochetAngle)
         {
             // ricochet the shell and do something

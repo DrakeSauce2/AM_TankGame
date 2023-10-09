@@ -26,13 +26,15 @@ public class Enemy : MonoBehaviour
         healthBar = Instantiate(healthBarPrefab, FindObjectOfType<Canvas>().transform);
         UIAttachComponent attachComp = healthBar.AddComponent<UIAttachComponent>();
         attachComp.SetupAttachment(healthBarAttachTransform);
+
+        SetArmorOwner();
     }
 
     private void SetArmorOwner()
     {
         foreach (Armor armor in armorPlates)
         {
-
+            armor.SetOwner(gameObject);
         }
     }
 

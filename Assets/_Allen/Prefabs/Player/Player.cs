@@ -1,7 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.Rendering.LookDev;
 using UnityEngine;
+using static HealthComponent;
 
 public class Player : MonoBehaviour
 {
@@ -13,17 +15,61 @@ public class Player : MonoBehaviour
 
     [SerializeField] private Hotbar hotbar;
 
-    private Rigidbody rBody;
+    [Space]
+
     [SerializeField] private Cannon cannon;
     [SerializeField] private Cannon machineGun;
+
+    [Space]
+
+    [SerializeField] private ValueGauge healthBarPrefab;
+    HealthComponent healthComponent;
+
+    [Space]
+
+    [SerializeField] private List<Armor> armorPlates = new List<Armor>();
+
+    private Rigidbody rBody;
 
     private void Awake()
     {
         rBody = GetComponent<Rigidbody>();
-        
+
+        healthComponent = GetComponent<HealthComponent>();
+        healthComponent.onTakenDamage += TookDamage;
+        healthComponent.onHealthEmpty += StartDeath;
+        healthComponent.onHealthChanged += HealthChanged;
+
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Confined;
     }
+
+    private void SetArmorOwner()
+    {
+        foreach (Armor armor in armorPlates)
+        {
+
+        }
+    }
+
+    #region Health Events
+
+    private void HealthChanged(float currentHealth, float delta, float maxHealth)
+    {
+        healthBarPrefab.SetValue(currentHealth, maxHealth);
+    }
+
+    private void StartDeath(float delta, float maxHealth)
+    {
+        
+    }
+
+    private void TookDamage(float currentHealth, float delta, float maxHealth)
+    {
+        
+    }
+
+    #endregion
 
     private void Update()
     {       
