@@ -14,15 +14,15 @@ public class Player : MonoBehaviour
     [SerializeField] private Hotbar hotbar;
 
     private Rigidbody rBody;
-    private Cannon cannon;
+    [SerializeField] private Cannon cannon;
+    [SerializeField] private Cannon machineGun;
 
 
 
     private void Awake()
     {
         rBody = GetComponent<Rigidbody>();
-        cannon = GetComponent<Cannon>();
-
+        
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Confined;
     }
@@ -32,6 +32,7 @@ public class Player : MonoBehaviour
         Move();
 
         FireMainGun();
+        FireMachineGun();
 
         SwitchAmmo();
     }
@@ -72,6 +73,14 @@ public class Player : MonoBehaviour
             cannon.Shoot();
         }
 
+    }
+
+    private void FireMachineGun()
+    {
+        if (Input.GetKey(KeyCode.Space))
+        {
+            machineGun.Shoot();
+        }
     }
 
     private void Move()

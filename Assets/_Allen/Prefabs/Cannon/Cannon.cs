@@ -24,6 +24,7 @@ public class Cannon : MonoBehaviour
 
     [Space]
 
+    [SerializeField] private Vector3 offset;
     [SerializeField] private LayerMask layerMask;
 
     private TargetGuide guide;
@@ -41,7 +42,9 @@ public class Cannon : MonoBehaviour
     {
         Reload();
 
-        if (Physics.Raycast(barrelEnd.position, barrelEnd.forward, out RaycastHit hitInfo, 10000f, layerMask))
+        if (guide == null) return;
+
+        if (Physics.Raycast(barrelEnd.position + offset, barrelEnd.forward + offset, out RaycastHit hitInfo, 10000f, layerMask))
         {
             Vector3 point = hitInfo.point;
 
@@ -49,9 +52,9 @@ public class Cannon : MonoBehaviour
         }
         else
         {
-            guide.SetCrosshair(Camera.main.WorldToScreenPoint(new Vector3(barrelEnd.position.x + barrelEnd.forward.x * 100f, 
-                                                                          barrelEnd.position.y + barrelEnd.forward.y * 100f,
-                                                                          barrelEnd.position.z + barrelEnd.forward.z * 100f)));
+            guide.SetCrosshair(Camera.main.WorldToScreenPoint(new Vector3(barrelEnd.position.x + offset.x + barrelEnd.forward.x * 100f, 
+                                                                          barrelEnd.position.y + offset.y + barrelEnd.forward.y * 100f,
+                                                                          barrelEnd.position.z + offset.z + barrelEnd.forward.z * 100f)));
         }
     }
 
@@ -62,7 +65,9 @@ public class Cannon : MonoBehaviour
         Instantiate(shellPrefab, barrelEnd.position, barrelEnd.rotation);
 
         currentReloadTime = 0;
-        reloadReticle.SetActive(true);
+
+        if(reloadReticle)
+            reloadReticle.SetActive(true);
 
         shotSound.Play();
 
@@ -72,17 +77,30 @@ public class Cannon : MonoBehaviour
     private void Reload()
     {
         currentReloadTime += Time.deltaTime;
-        reloadFill.fillAmount = currentReloadTime/reloadTime;
+
+        ReloadGUI();
 
         if (currentReloadTime >= reloadTime)
-        {
-            reloadReticle.SetActive(false);
+        {           
             isReloading = false;
         }
         else
         { 
             isReloading = true;
         }
+    }
+
+    private void ReloadGUI()
+    {
+        if (!reloadFill || !reloadReticle) return;
+
+        reloadFill.fillAmount = currentReloadTime / reloadTime;
+
+        if (reloadFill.fillAmount >= 1f)
+        {
+            reloadReticle.SetActive(false);
+        }
+
     }
 
 }

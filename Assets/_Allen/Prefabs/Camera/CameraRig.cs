@@ -16,15 +16,17 @@ public class CameraRig : MonoBehaviour
     [SerializeField] private Transform camPivot;
     [SerializeField] private Transform tankHead;
     [SerializeField] private Transform tankBarrel;
-    [SerializeField] private float offset;
+    [SerializeField] private Vector3 offset;
 
     [Space]
 
     [SerializeField] private float cameraSpeed;
     [SerializeField] private float headSpeed;
+    [SerializeField] private float zoomSpeed;
     private Camera cam;
 
     Vector3 refVel;
+    private bool zoom = false;
 
     float tankLookAngle = 0;
     float tankPivotAngle = 0;
@@ -38,10 +40,29 @@ public class CameraRig : MonoBehaviour
 
     private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Mouse1))
+        {
+            zoom = !zoom;
+        }
+
+        Zoom();
+        
         FollowCam();
 
         RotateTankHead();
         RotateCamera();
+    }
+
+    private void Zoom()
+    {
+        if (!zoom)
+        {
+            cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, 50, Time.deltaTime * zoomSpeed);
+        }
+        else
+        {
+            cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, 75, Time.deltaTime * zoomSpeed);
+        }       
     }
 
     private void FollowCam()
@@ -81,22 +102,22 @@ public class CameraRig : MonoBehaviour
     private void RotateTankHead()
     {
        
-        if (Physics.Raycast(cam.transform.position, cam.transform.forward, out RaycastHit hitInfo, 10000f, layerMask))
+        if (Physics.Raycast(cam.transform.position + offset, cam.transform.forward + offset, out RaycastHit hitInfo, 10000f, layerMask))
         {
             lookAtPoint = hitInfo.point;
         }
         else
         {
-            lookAtPoint = new Vector3(cam.transform.position.x + cam.transform.forward.x * 100f,
-                                      cam.transform.position.y + cam.transform.forward.y * 100f,
-                                      cam.transform.position.z + cam.transform.forward.z * 100f);
+            lookAtPoint = new Vector3(cam.transform.position.x + offset.x + cam.transform.forward.x * 100f,
+                                      cam.transform.position.y + offset.y + cam.transform.forward.y * 100f,
+                                      cam.transform.position.z + offset.z + cam.transform.forward.z * 100f);
         }
 
         tankHead.LookAt(lookAtPoint, tankHead.up);
         tankHead.rotation = new Quaternion(0, tankHead.rotation.y, 0, tankHead.rotation.w);
 
         tankBarrel.LookAt(lookAtPoint, tankBarrel.up);
-        tankBarrel.localRotation = new Quaternion(tankBarrel.localRotation.x + offset, tankBarrel.localRotation.y, tankBarrel.localRotation.z, tankBarrel.localRotation.w);
+        tankBarrel.localRotation = new Quaternion(tankBarrel.localRotation.x, tankBarrel.localRotation.y, tankBarrel.localRotation.z, tankBarrel.localRotation.w);
 
     }
 
