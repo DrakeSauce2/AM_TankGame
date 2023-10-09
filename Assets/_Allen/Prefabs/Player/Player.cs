@@ -17,8 +17,6 @@ public class Player : MonoBehaviour
     [SerializeField] private Cannon cannon;
     [SerializeField] private Cannon machineGun;
 
-
-
     private void Awake()
     {
         rBody = GetComponent<Rigidbody>();
@@ -29,12 +27,15 @@ public class Player : MonoBehaviour
 
     private void Update()
     {       
-        Move();
-
         FireMainGun();
         FireMachineGun();
 
         SwitchAmmo();
+    }
+
+    private void FixedUpdate()
+    {
+        Move();
     }
 
     private void SwitchAmmo()
