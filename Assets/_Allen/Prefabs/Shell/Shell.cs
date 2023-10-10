@@ -13,9 +13,9 @@ public class Shell : MonoBehaviour
     [SerializeField] private float mMass;
     [SerializeField] private float mPen;
     [SerializeField] private float mRicochetAngle;
-    [SerializeField] private float mDistanceTravelled;
     [Space(10)]
     [SerializeField] private ParticleSystem impactParticle;
+    [SerializeField] private float falloff;
 
     private Rigidbody rBody;
     private Vector3 startPos;
@@ -57,6 +57,12 @@ public class Shell : MonoBehaviour
         }
     }
 
+    public float distanceTravelled
+    {
+        get;
+        private set;
+    }
+
     #endregion
 
     private void Awake()
@@ -74,7 +80,6 @@ public class Shell : MonoBehaviour
         transform.localEulerAngles = velocity;
 
         endPos = transform.position;
-        mDistanceTravelled = GetDistanceTravelled();
 
         Quaternion targetRotation = Quaternion.LookRotation(velocity, Vector3.up);
         transform.rotation = targetRotation;
@@ -84,17 +89,12 @@ public class Shell : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         Vector3 entryPoint = transform.position;
+        distanceTravelled = GetDistanceTravelled();
 
         Instantiate(impactParticle, entryPoint, Quaternion.identity);
 
-        if (collision.collider.CompareTag("Armor"))
-        {
-
-            if (collision.gameObject.GetComponent<Armor>())
-                CalculatePenetration(collision);
-        }
-
-
+        CalculatePenetration(collision);
+        
         Destroy(gameObject);
     }
 
@@ -108,23 +108,28 @@ public class Shell : MonoBehaviour
     private bool CalculatePenetration(Collision collision)
     {
         Armor armor = collision.gameObject.GetComponent<Armor>();
+        if ( armor == null ) return false;
 
         float impactAngle = CalculateImpactAngle(collision.contacts[0].normal, transform.position);
         float effectiveThickness = CalculateArmorThickness(armor, impactAngle);
 
         Debug.Log($"Impact Angle: {impactAngle}, Effective Thickness: {effectiveThickness}");
 
-        
-        if (impactAngle > mRicochetAngle)
+        CalculateFalloff();
+        Debug.Log(mPen);
+
+        /*
+        if (impactAngle < mRicochetAngle)
         {
             // ricochet the shell and do something
             Debug.Log("Shell Ricochet!");
             return false;
         }
+        */
 
         if (penetration > effectiveThickness)
         {
-            collision.gameObject.GetComponent<Armor>().CalculateDamage(transform, this);
+            collision.gameObject.GetComponent<Armor>().CalculateDamage(transform, penetration - effectiveThickness);
             
             return true;
         } 
@@ -144,15 +149,17 @@ public class Shell : MonoBehaviour
 
     private float CalculateArmorThickness(Armor armor, float impactAngle)
     {
-        float effectiveThickness = armor.thickness / Mathf.Sin(impactAngle);
-        effectiveThickness = Mathf.Abs(effectiveThickness);
-        
+        float slope = Mathf.Sin(Mathf.Deg2Rad * impactAngle);
+        if (slope == 0) return 0;
+        slope = Mathf.Abs(slope);
+        float effectiveThickness = armor.thickness / slope;
+
         return effectiveThickness;
     }
 
-    private float CalculateFalloff()
+    private void CalculateFalloff()
     {
-        return 0;
+
     }
 
     #endregion

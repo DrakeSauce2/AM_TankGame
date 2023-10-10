@@ -159,10 +159,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mForce: 55000
   mMass: 5
-  mPen: 25
-  mRicochetAngle: 70
-  mDistanceTravelled: 0
+  mPen: 60
+  mRicochetAngle: 30
   impactParticle: {fileID: 19800014, guid: 5a4980cd082777342953f6ae4eca67a6, type: 3}
+  falloff: 0
 --- !u!135 &40435867890267352
 SphereCollider:
   m_ObjectHideFlags: 0

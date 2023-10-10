@@ -42,13 +42,15 @@ public class Player : MonoBehaviour
 
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Confined;
+
+        //SetArmorOwner();
     }
 
     private void SetArmorOwner()
     {
         foreach (Armor armor in armorPlates)
         {
-
+            armor.SetOwner(gameObject);
         }
     }
 
@@ -133,19 +135,19 @@ public class Player : MonoBehaviour
     private void Move()
     {
         float speed = moveSpeed * 10f;
-
-        if (GetInputDirection().z != 0)
+        Vector3 inputDir = GetInputDirection();
+        inputDir = inputDir.normalized;
+        if (inputDir.magnitude != 0 )
         {
-            rBody.AddForce(transform.forward * Time.deltaTime * GetInputDirection().z * speed);
+            rBody.AddForce((transform.forward * inputDir.z + transform.right * inputDir.x) * Time.fixedDeltaTime * speed);
             rBody.velocity = Vector3.ClampMagnitude(rBody.velocity, maxSpeed);
         }
 
-        if (GetInputDirection().x != 0)
+        if(inputDir.x != 0)
         {
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(
-                transform.right * GetInputDirection().x * turnSpeed, transform.up), 1 * Time.deltaTime);
+            transform.right * inputDir.x * turnSpeed, transform.up), 1 * Time.deltaTime);
         }
-
     }
 
     private Vector3 GetInputDirection()

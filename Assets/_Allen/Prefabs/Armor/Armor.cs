@@ -40,9 +40,9 @@ public class Armor : MonoBehaviour
         ownerHealthComponent = owner.GetComponent<HealthComponent>();
     }
 
-    public void CalculateDamage(Transform incomingObject, Shell shell)
+    public void CalculateDamage(Transform incomingObject, float damage)
     {
-        ownerHealthComponent.ChangeHealth(-10);
+        ownerHealthComponent.ChangeHealth(-damage);
         //Owner.GetComponent<HealthComponent>().ChangeHealth(-10);
         Debug.Log("Object Hit");
     }
