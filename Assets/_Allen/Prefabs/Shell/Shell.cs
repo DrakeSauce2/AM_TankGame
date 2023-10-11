@@ -141,7 +141,7 @@ public class Shell : MonoBehaviour
     private float CalculateImpactAngle(Vector3 from, Vector3 to)
     {
         float impactAngle = Vector3.Angle(from, to);
-        impactAngle -= 180;
+        //impactAngle -= 180;
         impactAngle = Mathf.Abs(impactAngle);
 
         return impactAngle;

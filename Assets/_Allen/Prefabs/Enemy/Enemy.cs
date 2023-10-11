@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using static HealthComponent;
@@ -16,6 +17,11 @@ public class Enemy : MonoBehaviour
 
     [SerializeField] private List<Armor> armorPlates = new List<Armor>();
 
+    [Space]
+
+    [SerializeField] private TextMeshProUGUI damageText;
+    private Animator damageAnim;
+
     private void Awake()
     {
         healthComponent = GetComponent<HealthComponent>();
@@ -24,8 +30,16 @@ public class Enemy : MonoBehaviour
         healthComponent.onHealthChanged += HealthChanged;
 
         healthBar = Instantiate(healthBarPrefab, FindObjectOfType<Canvas>().transform);
+
         UIAttachComponent attachComp = healthBar.AddComponent<UIAttachComponent>();
+        UIAttachComponent damageAttachComp = damageText.AddComponent<UIAttachComponent>();
+
         attachComp.SetupAttachment(healthBarAttachTransform);
+        damageAttachComp.SetupAttachment(healthBarAttachTransform);
+
+        damageAnim = damageText.GetComponent<Animator>();
+
+        damageText.text = "";
 
         SetArmorOwner();
     }
@@ -41,6 +55,11 @@ public class Enemy : MonoBehaviour
     private void HealthChanged(float currentHealth, float delta, float maxHealth)
     {
         healthBar.SetValue(currentHealth, maxHealth);
+
+        damageText.text = delta.ToString();
+
+        damageAnim.SetTrigger("TookDamage");
+        //damageAnim.ResetTrigger("TookDamage");
     }
 
     private void StartDeath(float delta, float maxHealth)

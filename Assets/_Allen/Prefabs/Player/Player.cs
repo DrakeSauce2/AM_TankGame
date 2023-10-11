@@ -139,7 +139,8 @@ public class Player : MonoBehaviour
         inputDir = inputDir.normalized;
         if (inputDir.magnitude != 0 )
         {
-            rBody.AddForce((transform.forward * inputDir.z + transform.right * inputDir.x) * Time.fixedDeltaTime * speed);
+            //rBody.AddForce((transform.forward * inputDir.z + transform.right * inputDir.x) * Time.fixedDeltaTime * speed);
+            rBody.AddForce(transform.forward * Time.deltaTime * GetInputDirection().z * speed);
             rBody.velocity = Vector3.ClampMagnitude(rBody.velocity, maxSpeed);
         }
 

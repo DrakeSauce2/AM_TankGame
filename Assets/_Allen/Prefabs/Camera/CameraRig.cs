@@ -92,10 +92,10 @@ public class CameraRig : MonoBehaviour
         lookDir.y = 0;
         tankHead.LookAt(tankHead.transform.position+lookDir, Vector3.up);
         
-        //tankHead.rotation = new Quaternion(0, tankHead.rotation.y, 0, tankHead.rotation.w);
+        //tankHead.rotation = new Quaternion(tankBody.rotation.z, tankHead.rotation.y, tankHead.rotation.z, tankHead.rotation.w);
 
         tankBarrel.LookAt(lookAtPoint, Vector3.up);
-        tankBarrel.localRotation = new Quaternion(ClampBarrel(tankBarrel.localRotation.x), tankBarrel.localRotation.y, tankBarrel.localRotation.z, tankBarrel.localRotation.w);
+        //tankBarrel.localRotation = new Quaternion(ClampBarrel(tankBarrel.localRotation.x), tankBarrel.localRotation.y, tankBarrel.localRotation.z, tankBarrel.localRotation.w);
 
     }
 
