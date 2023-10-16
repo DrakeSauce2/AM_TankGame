@@ -2,51 +2,30 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody))]
 public class TankTrack : MonoBehaviour
 {
-    [SerializeField] private float thrust = 0f;
-    private float maxSpeed;
+    [SerializeField] private WheelCollider[] wheels;
+    private float acceleration;
 
-    private Rigidbody rBody;
-
-    private void Awake()
+    public void SetAcceleration(float accel)
     {
-        rBody = GetComponent<Rigidbody>();
+        acceleration = accel;
     }
 
-    private void FixedUpdate()
+    public void Accelerate(int dir)
     {
-        rBody.velocity = Vector3.ClampMagnitude(rBody.velocity, maxSpeed);
+        foreach (WheelCollider wheel in wheels)
+        {
+            wheel.motorTorque = acceleration * dir;
+        }
     }
 
-    public void SetMaxSpeed(float speed)
+    public void Brake(float brakeTorque)
     {
-        maxSpeed = speed;
+        foreach (WheelCollider wheel in wheels)
+        {
+            wheel.brakeTorque = brakeTorque;
+        }
     }
-
-    #region Movement Directions
-
-    public void Forward()
-    {
-        rBody.AddForce(transform.forward * thrust);
-    }
-
-    public void Backward()
-    {
-        rBody.AddForce(-transform.forward * thrust);
-    }
-
-    public void Right()
-    {
-        rBody.AddForce(transform.right * thrust);
-    }
-
-    public void Left()
-    {
-        rBody.AddForce(-transform.right * thrust);
-    }
-
-    #endregion
 
 }

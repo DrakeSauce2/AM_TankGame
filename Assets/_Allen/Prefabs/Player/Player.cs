@@ -13,6 +13,15 @@ public class Player : MonoBehaviour
 
     [Space]
 
+    [SerializeField] private TankTrack leftTrack;
+    [SerializeField] private TankTrack rightTrack;
+    [SerializeField] private float tankAcceleration;
+    [SerializeField] private float brakeTorque;
+    [SerializeField] private float downForce;
+
+
+    [Space]
+
     [SerializeField] private Hotbar hotbar;
 
     [Space]
@@ -44,6 +53,8 @@ public class Player : MonoBehaviour
         Cursor.lockState = CursorLockMode.Confined;
 
         //SetArmorOwner();
+        leftTrack.SetAcceleration(tankAcceleration);
+        rightTrack.SetAcceleration(tankAcceleration);
     }
 
     private void SetArmorOwner()
@@ -83,7 +94,9 @@ public class Player : MonoBehaviour
 
     private void FixedUpdate()
     {
-        Move();
+        NewMove();
+
+        rBody.AddForce(-transform.up * downForce);
     }
 
     private void SwitchAmmo()
@@ -149,6 +162,45 @@ public class Player : MonoBehaviour
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(
             transform.right * inputDir.x * turnSpeed, transform.up), 1 * Time.deltaTime);
         }
+    }
+
+    private void NewMove()
+    {
+        int forward = Mathf.RoundToInt(Input.GetAxis("Vertical"));
+        int horizontal = Mathf.RoundToInt(Input.GetAxis("Horizontal"));
+
+        CheckBrake(forward);
+
+        if(horizontal != 0)
+        {
+            leftTrack.SetAcceleration(tankAcceleration * 4);
+            rightTrack.SetAcceleration(tankAcceleration * 4);
+        }
+        else
+        {
+            leftTrack.SetAcceleration(tankAcceleration);
+            rightTrack.SetAcceleration(tankAcceleration);
+        }
+
+        leftTrack.Accelerate(forward + horizontal);
+        rightTrack.Accelerate(forward - horizontal);
+
+        rBody.velocity = Vector3.ClampMagnitude(rBody.velocity, maxSpeed);
+    }
+
+    private void CheckBrake(int forward)
+    {
+        if (rBody.velocity.magnitude > 1 && forward < 0)
+        {
+            leftTrack.Brake(brakeTorque);
+            rightTrack.Brake(brakeTorque);
+        }
+        else
+        {
+            leftTrack.Brake(0);
+            rightTrack.Brake(0);
+        }
+
     }
 
     private Vector3 GetInputDirection()
