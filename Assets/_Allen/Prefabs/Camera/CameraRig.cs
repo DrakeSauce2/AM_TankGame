@@ -17,6 +17,7 @@ public class CameraRig : MonoBehaviour
     [SerializeField] private Transform tankHead;
     [SerializeField] private Transform tankBarrel;
     [SerializeField] private Vector3 offset;
+    [SerializeField] private float headTurnSpeed;
 
     [Space]
 
@@ -85,8 +86,21 @@ public class CameraRig : MonoBehaviour
                                       cam.transform.position.z + offset.z + cam.transform.forward.z * 100f);
         }
 
+        // New Code
 
+        Vector3 up = tankHead.up;
+        Vector3 directionToTarget = Vector3.ProjectOnPlane(lookAtPoint - tankHead.position, up);
+        Quaternion turretTargetDirection = Quaternion.LookRotation(directionToTarget, up);
 
+        Quaternion from = Quaternion.LookRotation(tankHead.forward, tankHead.up);
+        tankHead.rotation = Quaternion.RotateTowards(from, turretTargetDirection, headTurnSpeed * Time.fixedDeltaTime);
+
+        tankBarrel.LookAt(lookAtPoint, Vector3.up);
+        tankBarrel.localEulerAngles = new Vector3(ClampBarrel(tankBarrel.localEulerAngles.x), 0, 0);
+
+        //
+
+        /*
 
         Vector3 lookDir = lookAtPoint - tankHead.transform.position;
         lookDir.y = 0;
@@ -97,11 +111,13 @@ public class CameraRig : MonoBehaviour
         tankBarrel.LookAt(lookAtPoint, Vector3.up);
         //tankBarrel.localRotation = new Quaternion(ClampBarrel(tankBarrel.localRotation.x), tankBarrel.localRotation.y, tankBarrel.localRotation.z, tankBarrel.localRotation.w);
 
+        */
+
     }
 
     private float ClampBarrel(float barrelRotation)
     {
-        if (barrelRotation >= 13)
+        if (barrelRotation > 13)
             return 13;
 
         if (barrelRotation < -15)

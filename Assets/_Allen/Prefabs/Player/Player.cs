@@ -171,19 +171,11 @@ public class Player : MonoBehaviour
 
         CheckBrake(forward);
 
-        if(horizontal != 0)
-        {
-            leftTrack.SetAcceleration(tankAcceleration * 4);
-            rightTrack.SetAcceleration(tankAcceleration * 4);
-        }
-        else
-        {
-            leftTrack.SetAcceleration(tankAcceleration);
-            rightTrack.SetAcceleration(tankAcceleration);
-        }
+        leftTrack.Accelerate(forward);
+        rightTrack.Accelerate(forward);
 
-        leftTrack.Accelerate(forward + horizontal);
-        rightTrack.Accelerate(forward - horizontal);
+        float turn = forward != 0 ? turnSpeed : turnSpeed / 4;
+        rBody.AddRelativeTorque(Vector3.up * horizontal * turnSpeed * Time.fixedDeltaTime, ForceMode.Acceleration);
 
         rBody.velocity = Vector3.ClampMagnitude(rBody.velocity, maxSpeed);
     }
