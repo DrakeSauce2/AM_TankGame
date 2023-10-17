@@ -96,34 +96,45 @@ public class CameraRig : MonoBehaviour
         tankHead.rotation = Quaternion.RotateTowards(from, turretTargetDirection, headTurnSpeed * Time.fixedDeltaTime);
 
         tankBarrel.LookAt(lookAtPoint, Vector3.up);
-        tankBarrel.localEulerAngles = new Vector3(ClampBarrel(tankBarrel.localEulerAngles.x), 0, 0);
 
-        //
-
-        /*
-
-        Vector3 lookDir = lookAtPoint - tankHead.transform.position;
-        lookDir.y = 0;
-        tankHead.LookAt(tankHead.transform.position+lookDir, Vector3.up);
-        
-        //tankHead.rotation = new Quaternion(tankBody.rotation.z, tankHead.rotation.y, tankHead.rotation.z, tankHead.rotation.w);
-
-        tankBarrel.LookAt(lookAtPoint, Vector3.up);
-        //tankBarrel.localRotation = new Quaternion(ClampBarrel(tankBarrel.localRotation.x), tankBarrel.localRotation.y, tankBarrel.localRotation.z, tankBarrel.localRotation.w);
-
-        */
-
+        tankBarrel.rotation = new Quaternion(ClampBarrelX(tankBarrel.rotation, 13),
+                                             tankHead.rotation.y,
+                                             tankHead.rotation.z, 
+                                             tankBarrel.rotation.w);
     }
 
-    private float ClampBarrel(float barrelRotation)
+    private Quaternion ClampRotation(Quaternion q, Vector3 bounds)
     {
-        if (barrelRotation > 13)
-            return 13;
+        q.x /= q.w;
+        q.y /= q.w;
+        q.z /= q.w;
+        q.w = 1.0f;
 
-        if (barrelRotation < -15)
-            return -15;
+        float angleX = 2.0f * Mathf.Rad2Deg * Mathf.Atan(q.x);
+        angleX = Mathf.Clamp(angleX, -bounds.x, bounds.x);
+        q.x = Mathf.Tan(0.5f * Mathf.Deg2Rad * angleX);
 
-        return barrelRotation;
+        float angleY = 2.0f * Mathf.Rad2Deg * Mathf.Atan(q.y);
+        angleY = Mathf.Clamp(angleY, -bounds.y, bounds.y);
+        q.y = Mathf.Tan(0.5f * Mathf.Deg2Rad * angleY);
+
+        float angleZ = 2.0f * Mathf.Rad2Deg * Mathf.Atan(q.z);
+        angleZ = Mathf.Clamp(angleZ, -bounds.z, bounds.z);
+        q.z = Mathf.Tan(0.5f * Mathf.Deg2Rad * angleZ);
+
+        return q;
+    }
+
+    private float ClampBarrelX(Quaternion q, float clampAngle)
+    {
+        q.x /= q.w;
+        q.w = 1.0f;
+
+        float angleX = 2.0f * Mathf.Rad2Deg * Mathf.Atan(q.x);
+        angleX = Mathf.Clamp(angleX, -clampAngle, clampAngle);
+        q.x = Mathf.Tan(0.5f * Mathf.Deg2Rad * angleX);
+
+        return q.x;
     }
 
     private void RotateCamera()

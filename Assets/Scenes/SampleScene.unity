@@ -1401,12 +1401,6 @@ WheelCollider:
   m_LayerOverridePriority: 0
   m_Enabled: 1
   m_ProvidesContacts: 0
---- !u!20 &952584849 stripped
-Camera:
-  m_CorrespondingSourceObject: {fileID: 4435130383157253057, guid: 2b993004017cdcf4f8c67accd6a64a62,
-    type: 3}
-  m_PrefabInstance: {fileID: 4239490163045925636}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &956061161
 GameObject:
   m_ObjectHideFlags: 0
@@ -1587,27 +1581,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 5852099204255278341}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1061703785 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 725255383499453270, guid: 2b993004017cdcf4f8c67accd6a64a62,
-    type: 3}
-  m_PrefabInstance: {fileID: 4239490163045925636}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1061703788
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1061703785}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 52155fcbd2d45fb40acfcad4d72489e5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cam: {fileID: 952584849}
-  reticle: {fileID: 1711245464}
-  smoothSpeed: 0.1
 --- !u!1 &1255804002
 GameObject:
   m_ObjectHideFlags: 0
@@ -2340,12 +2313,6 @@ WheelCollider:
   m_LayerOverridePriority: 0
   m_Enabled: 1
   m_ProvidesContacts: 0
---- !u!224 &1711245464 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 879450898418129800, guid: fc65d9ee83b671543991050548f3d818,
-    type: 3}
-  m_PrefabInstance: {fileID: 5621172832635497370}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1785318839
 GameObject:
   m_ObjectHideFlags: 0
@@ -5954,11 +5921,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 725255383499453270, guid: 2b993004017cdcf4f8c67accd6a64a62,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1061703788}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2b993004017cdcf4f8c67accd6a64a62, type: 3}
 --- !u!33 &4293122719061188127
 MeshFilter:
@@ -7812,7 +7775,7 @@ PrefabInstance:
     - target: {fileID: 5755972062318910096, guid: 690f4d522aad757488b2e1fbc3248ef1,
         type: 3}
       propertyPath: turnSpeed
-      value: 5
+      value: 150
       objectReference: {fileID: 0}
     - target: {fileID: 5755972062318910096, guid: 690f4d522aad757488b2e1fbc3248ef1,
         type: 3}
