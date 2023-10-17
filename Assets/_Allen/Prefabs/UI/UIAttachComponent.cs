@@ -12,7 +12,7 @@ public class UIAttachComponent : MonoBehaviour
 
     private void Update()
     {
-        transform.position = Camera.main.WorldToScreenPoint(attachParentTransform.position);
+        transform.position = CameraRig.Instance.GetActiveCamera().WorldToScreenPoint(attachParentTransform.position);
     }
 
 }

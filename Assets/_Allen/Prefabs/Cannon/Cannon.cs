@@ -48,13 +48,13 @@ public class Cannon : MonoBehaviour
         {
             Vector3 point = hitInfo.point;
 
-            guide.SetCrosshair(Camera.main.WorldToScreenPoint(point));
+            guide.SetCrosshair(CameraRig.Instance.GetActiveCamera().WorldToScreenPoint(point));
         }
         else
         {
-            guide.SetCrosshair(Camera.main.WorldToScreenPoint(new Vector3(barrelEnd.position.x + offset.x + barrelEnd.forward.x * 100f, 
-                                                                          barrelEnd.position.y + offset.y + barrelEnd.forward.y * 100f,
-                                                                          barrelEnd.position.z + offset.z + barrelEnd.forward.z * 100f)));
+            guide.SetCrosshair(CameraRig.Instance.GetActiveCamera().WorldToScreenPoint(new Vector3(barrelEnd.position.x + offset.x + barrelEnd.forward.x * 100f, 
+                                                                                                   barrelEnd.position.y + offset.y + barrelEnd.forward.y * 100f,
+                                                                                                   barrelEnd.position.z + offset.z + barrelEnd.forward.z * 100f)));
         }
     }
 

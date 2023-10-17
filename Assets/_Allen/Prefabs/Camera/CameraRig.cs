@@ -1,10 +1,26 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
+public enum TankViewState
+{
+    ThirdPersonView,
+    FirstPersonView
+}
+
 public class CameraRig : MonoBehaviour
 {
+    public static CameraRig Instance;
+
+    [SerializeField] private Camera thirdPersonCam;
+    [SerializeField] private Camera firstPersonCam;
+    [SerializeField] private GameObject fpsViewShroud;
+    [SerializeField] private float xSense;
+    private TankViewState tankViewState = TankViewState.ThirdPersonView;
+
+    [Space]
 
     [SerializeField] private Transform followTarget;
     private Vector3 cameraFollowVelocity = Vector3.zero;
@@ -23,43 +39,108 @@ public class CameraRig : MonoBehaviour
 
     [SerializeField] private float cameraSpeed;
     [SerializeField] private float zoomSpeed;
-    private Camera cam;
 
     Vector3 refVel;
     private bool zoom = false;
+    private bool isSwitching = false;
 
     float camLookAngle = 0;
     float camPivotAngle = 0;
 
     private void Awake()
     {
-        cam = Camera.main;
+        if (Instance == null) Instance = this;
+        else Destroy(Instance);
+    }
+
+    public Camera GetActiveCamera()
+    {
+        if(tankViewState == TankViewState.ThirdPersonView)
+            return thirdPersonCam;
+        else
+            return firstPersonCam;
     }
 
     private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.LeftShift) && !isSwitching)
+        {
+            StartCoroutine(SwitchCamera());
+        }       
+
+        ThirdPersonCameraControls();
+
+        FirstPersonCameraControls();
+    }
+
+    private void ThirdPersonCameraControls()
+    {
+        if (tankViewState == TankViewState.FirstPersonView) return;
+
         if (Input.GetKeyDown(KeyCode.Mouse1))
         {
             zoom = !zoom;
         }
 
         Zoom();
-        
+
         FollowCam();
 
-        RotateTankHead();
-        RotateCamera();
+        RotateTankHeadThirdPerson();
+        RotateThirdPersonCamera();
+    }
+
+    private void FirstPersonCameraControls()
+    {
+        if (tankViewState == TankViewState.ThirdPersonView) return;
+
+        RotateTankHeadFirstPerson();
+    }
+
+    private IEnumerator SwitchCamera()
+    {       
+        if (tankViewState == TankViewState.FirstPersonView)
+        {
+            isSwitching = true;
+
+            thirdPersonCam.gameObject.SetActive(true);
+            firstPersonCam.gameObject.SetActive(false);
+
+            fpsViewShroud.SetActive(false);
+            tankViewState = TankViewState.ThirdPersonView;
+
+            yield return new WaitForSeconds(0.2f);
+
+            isSwitching = false;
+            yield return null;
+        }
+        else if (tankViewState == TankViewState.ThirdPersonView)
+        {
+            isSwitching = true;
+
+            thirdPersonCam.gameObject.SetActive(false);
+            firstPersonCam.gameObject.SetActive(true);
+
+            fpsViewShroud.SetActive(true);
+            tankViewState = TankViewState.FirstPersonView;
+
+            yield return new WaitForSeconds(0.2f);
+
+            isSwitching = false;
+            yield return null;
+        }
+
     }
 
     private void Zoom()
     {
-        if (zoom && cam.fieldOfView != 50)
+        if (zoom && thirdPersonCam.fieldOfView != 50)
         {
-            cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, 50, Time.deltaTime * zoomSpeed);
+            thirdPersonCam.fieldOfView = Mathf.Lerp(thirdPersonCam.fieldOfView, 50, Time.deltaTime * zoomSpeed);
         }
-        else if (!zoom && cam.fieldOfView != 75)
+        else if (!zoom && thirdPersonCam.fieldOfView != 75)
         {
-            cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, 75, Time.deltaTime * zoomSpeed);
+            thirdPersonCam.fieldOfView = Mathf.Lerp(thirdPersonCam.fieldOfView, 75, Time.deltaTime * zoomSpeed);
         }       
     }
 
@@ -72,21 +153,18 @@ public class CameraRig : MonoBehaviour
     }
 
     Vector3 lookAtPoint;
-    private void RotateTankHead()
+    private void RotateTankHeadThirdPerson()
     {
-       
-        if (Physics.Raycast(cam.transform.position + offset, cam.transform.forward + offset, out RaycastHit hitInfo, 10000f, layerMask))
+        if (Physics.Raycast(thirdPersonCam.transform.position + offset, thirdPersonCam.transform.forward + offset, out RaycastHit hitInfo, 10000f, layerMask))
         {
             lookAtPoint = hitInfo.point;
         }
         else
         {
-            lookAtPoint = new Vector3(cam.transform.position.x + offset.x + cam.transform.forward.x * 100f,
-                                      cam.transform.position.y + offset.y + cam.transform.forward.y * 100f,
-                                      cam.transform.position.z + offset.z + cam.transform.forward.z * 100f);
+            lookAtPoint = new Vector3(thirdPersonCam.transform.position.x + offset.x + thirdPersonCam.transform.forward.x * 100f,
+                                      thirdPersonCam.transform.position.y + offset.y + thirdPersonCam.transform.forward.y * 100f,
+                                      thirdPersonCam.transform.position.z + offset.z + thirdPersonCam.transform.forward.z * 100f);
         }
-
-        // New Code
 
         Vector3 up = tankHead.up;
         Vector3 directionToTarget = Vector3.ProjectOnPlane(lookAtPoint - tankHead.position, up);
@@ -100,29 +178,25 @@ public class CameraRig : MonoBehaviour
         tankBarrel.rotation = new Quaternion(ClampBarrelX(tankBarrel.rotation, 13),
                                              tankHead.rotation.y,
                                              tankHead.rotation.z, 
-                                             tankBarrel.rotation.w);
+                                             tankHead.rotation.w);
+
     }
 
-    private Quaternion ClampRotation(Quaternion q, Vector3 bounds)
+    private void RotateTankHeadFirstPerson()
     {
-        q.x /= q.w;
-        q.y /= q.w;
-        q.z /= q.w;
-        q.w = 1.0f;
+        if (MouseInput().magnitude > 0)
+        {
+            Vector3 horizontalInput = new Vector3(0, Input.GetAxis("Mouse X"), 0);
+            tankHead.Rotate(horizontalInput * Time.fixedDeltaTime * headTurnSpeed);
 
-        float angleX = 2.0f * Mathf.Rad2Deg * Mathf.Atan(q.x);
-        angleX = Mathf.Clamp(angleX, -bounds.x, bounds.x);
-        q.x = Mathf.Tan(0.5f * Mathf.Deg2Rad * angleX);
-
-        float angleY = 2.0f * Mathf.Rad2Deg * Mathf.Atan(q.y);
-        angleY = Mathf.Clamp(angleY, -bounds.y, bounds.y);
-        q.y = Mathf.Tan(0.5f * Mathf.Deg2Rad * angleY);
-
-        float angleZ = 2.0f * Mathf.Rad2Deg * Mathf.Atan(q.z);
-        angleZ = Mathf.Clamp(angleZ, -bounds.z, bounds.z);
-        q.z = Mathf.Tan(0.5f * Mathf.Deg2Rad * angleZ);
-
-        return q;
+            Vector3 verticalInput = new Vector3(Input.GetAxis("Mouse Y"), 0, 0);
+            tankBarrel.Rotate(-verticalInput);
+            //tankBarrel.LookAt(-verticalInput, Vector3.up);
+            //tankBarrel.rotation = new Quaternion(ClampBarrelX(tankBarrel.rotation, 13),
+                                                 //tankHead.rotation.y,
+                                                 //tankHead.rotation.z,
+                                                 //tankBarrel.rotation.w);
+        }
     }
 
     private float ClampBarrelX(Quaternion q, float clampAngle)
@@ -137,7 +211,7 @@ public class CameraRig : MonoBehaviour
         return q.x;
     }
 
-    private void RotateCamera()
+    private void RotateThirdPersonCamera()
     {
         Vector3 rotationY;
         Vector3 rotationX;
