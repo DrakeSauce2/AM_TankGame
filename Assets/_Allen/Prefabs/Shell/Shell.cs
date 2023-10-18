@@ -3,6 +3,12 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
+public enum ShellTypes
+{
+    KINETIC,
+    ENERGY
+}
+
 [RequireComponent(typeof(Rigidbody))]
 public class Shell : MonoBehaviour
 {
@@ -10,12 +16,18 @@ public class Shell : MonoBehaviour
     #region Private Variables
 
     [SerializeField] private float mForce;
+    [Header("Kinetic Variables")]
     [SerializeField] private float mMass;
     [SerializeField] private float mPen;
     [SerializeField] private float mRicochetAngle;
+    [Header("Energy Variables")]
+    [SerializeField] private float blastRadius;
+    [SerializeField] private float blastDamage;
+    [SerializeField] private float blastPenetration;
     [Space(10)]
     [SerializeField] private ParticleSystem impactParticle;
-    [SerializeField] private float falloff;
+    [Space(10)]
+    [SerializeField] private ShellTypes shellType;
 
     private Rigidbody rBody;
     private Vector3 startPos;
@@ -57,12 +69,6 @@ public class Shell : MonoBehaviour
         }
     }
 
-    public float distanceTravelled
-    {
-        get;
-        private set;
-    }
-
     #endregion
 
     private void Awake()
@@ -73,6 +79,8 @@ public class Shell : MonoBehaviour
         rBody.mass = mMass;
 
         rBody.AddForce(transform.forward * mForce);
+
+        Destroy(gameObject, 5f);
     }
 
     private void Update()
@@ -85,15 +93,24 @@ public class Shell : MonoBehaviour
         transform.rotation = targetRotation;
     }
 
-
     private void OnCollisionEnter(Collision collision)
     {
-        Vector3 entryPoint = transform.position;
-        distanceTravelled = GetDistanceTravelled();
+        endPos = transform.position;
 
-        Instantiate(impactParticle, entryPoint, Quaternion.identity);
+        Instantiate(impactParticle, endPos, Quaternion.identity);
 
-        CalculatePenetration(collision);
+        switch (shellType)
+        {
+            case ShellTypes.KINETIC:
+                CalculateKineticPenetration(collision);
+                break;
+            case ShellTypes.ENERGY:
+                CalculateEnergyPenetration();
+                break;
+            default:
+                CalculateKineticPenetration(collision);
+                break;
+        }
         
         Destroy(gameObject);
     }
@@ -105,18 +122,39 @@ public class Shell : MonoBehaviour
 
     #region Calculation Functions
 
-    private bool CalculatePenetration(Collision collision)
+    public virtual void CalculateEnergyPenetration()
+    {
+        Collider[] colsInBlast = Physics.OverlapSphere(endPos, blastRadius);
+        float cumulativeDamage = 0;
+
+        foreach (Collider collider in colsInBlast)
+        {
+            Armor armor = collider.gameObject.GetComponent<Armor>();
+            if (armor == null) continue;
+
+            float totalDamage = Mathf.Abs(CalculateEnergyFalloff(endPos, collider.transform.position)) / colsInBlast.Length;
+
+            collider.gameObject.GetComponent<Armor>().CalculateDamage(transform, totalDamage);
+            cumulativeDamage += totalDamage;
+        }
+
+        Debug.Log(cumulativeDamage);
+    }
+
+    public virtual bool CalculateKineticPenetration(Collision collision)
     {
         Armor armor = collision.gameObject.GetComponent<Armor>();
         if ( armor == null ) return false;
+
+        // ^ Calculates After Check ^
 
         float impactAngle = CalculateImpactAngle(collision.contacts[0].normal, transform.position);
         float effectiveThickness = CalculateArmorThickness(armor, impactAngle);
 
         Debug.Log($"Impact Angle: {impactAngle}, Effective Thickness: {effectiveThickness}");
 
-        CalculateFalloff();
-        Debug.Log(mPen);
+        float totalPenetration = CalculateKineticFalloff();
+        Debug.Log(totalPenetration);
 
         /*
         if (impactAngle < mRicochetAngle)
@@ -127,9 +165,9 @@ public class Shell : MonoBehaviour
         }
         */
 
-        if (penetration > effectiveThickness)
+        if (totalPenetration > effectiveThickness)
         {
-            collision.gameObject.GetComponent<Armor>().CalculateDamage(transform, penetration - effectiveThickness);
+            collision.gameObject.GetComponent<Armor>().CalculateDamage(transform, totalPenetration - effectiveThickness);
             
             return true;
         } 
@@ -157,9 +195,28 @@ public class Shell : MonoBehaviour
         return effectiveThickness;
     }
 
-    private void CalculateFalloff()
+    public virtual float CalculateKineticFalloff()
     {
+        float distance = GetDistanceTravelled();
+        float tempPen = mPen;
 
+        for (int i = Mathf.RoundToInt(distance); i > 0; i -= 5)
+        {
+            tempPen -= 2;
+        }
+        return tempPen;
+    }
+
+    private float CalculateEnergyFalloff(Vector3 shellHitPos, Vector3 colHitPos)
+    {
+        float distance = Vector3.Distance(shellHitPos, colHitPos);
+        float tempDamage = blastDamage;
+
+        for (int i = Mathf.RoundToInt(distance); i > 0; i -= 5)
+        {
+            tempDamage -= 2;
+        }
+        return tempDamage;
     }
 
     #endregion

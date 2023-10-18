@@ -8164,6 +8164,12 @@ PrefabInstance:
       objectReference: {fileID: 1505852701}
     - target: {fileID: 7853939892623531777, guid: 690f4d522aad757488b2e1fbc3248ef1,
         type: 3}
+      propertyPath: shellPrefab
+      value: 
+      objectReference: {fileID: 7967954056359938758, guid: 6e3c2eda37459b848b66078985b53a59,
+        type: 3}
+    - target: {fileID: 7853939892623531777, guid: 690f4d522aad757488b2e1fbc3248ef1,
+        type: 3}
       propertyPath: reloadReticle
       value: 
       objectReference: {fileID: 599710062}

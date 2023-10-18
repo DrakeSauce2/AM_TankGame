@@ -96,7 +96,7 @@ GameObject:
   - component: {fileID: 8050959182977717926}
   - component: {fileID: 6787622946172138365}
   m_Layer: 7
-  m_Name: Tank Shell
+  m_Name: APFSDS Shell
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
