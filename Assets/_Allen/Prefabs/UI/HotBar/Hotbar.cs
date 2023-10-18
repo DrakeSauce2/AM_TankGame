@@ -7,6 +7,20 @@ public class Hotbar : MonoBehaviour
     [SerializeField] private List<GameObject> slots = new List<GameObject>();
 
     private List<GameObject> spawnedSlots = new List<GameObject>();
+    private int selectedIndex;
+
+    public int Index
+    {
+        get
+        {
+            return selectedIndex;
+        }
+        private set
+        {
+            selectedIndex = value;
+        }
+
+    }
 
     private void Awake()
     {
@@ -21,6 +35,7 @@ public class Hotbar : MonoBehaviour
 
     public void SelectSlot(int index)
     {
+        Index = index;
         for(int i = 0; i < slots.Count; i++)
         {
             if (i == index - 1)

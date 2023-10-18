@@ -41,21 +41,8 @@ public class Cannon : MonoBehaviour
     private void Update()
     {
         Reload();
-
-        if (guide == null) return;
-
-        if (Physics.Raycast(barrelEnd.position + offset, barrelEnd.forward + offset, out RaycastHit hitInfo, 10000f, layerMask))
-        {
-            Vector3 point = hitInfo.point;
-
-            guide.SetCrosshair(CameraRig.Instance.GetActiveCamera().WorldToScreenPoint(point));
-        }
-        else
-        {
-            guide.SetCrosshair(CameraRig.Instance.GetActiveCamera().WorldToScreenPoint(new Vector3(barrelEnd.position.x + offset.x + barrelEnd.forward.x * 100f, 
-                                                                                                   barrelEnd.position.y + offset.y + barrelEnd.forward.y * 100f,
-                                                                                                   barrelEnd.position.z + offset.z + barrelEnd.forward.z * 100f)));
-        }
+        AimBarrel();
+        
     }
 
     public void Shoot()
@@ -72,6 +59,30 @@ public class Cannon : MonoBehaviour
         shotSound.Play();
 
         shotParticle.Play();
+    }
+
+    public void SwitchSelectedShell(Shell newShell)
+    {
+        shell = newShell;
+        currentReloadTime = 0;
+    }
+
+    private void AimBarrel()
+    {
+        if (guide == null) return;
+
+        if (Physics.Raycast(barrelEnd.position + offset, barrelEnd.forward + offset, out RaycastHit hitInfo, 10000f, layerMask))
+        {
+            Vector3 point = hitInfo.point;
+
+            guide.SetCrosshair(CameraRig.Instance.GetActiveCamera().WorldToScreenPoint(point));
+        }
+        else
+        {
+            guide.SetCrosshair(CameraRig.Instance.GetActiveCamera().WorldToScreenPoint(new Vector3(barrelEnd.position.x + offset.x + barrelEnd.forward.x * 100f,
+                                                                                                   barrelEnd.position.y + offset.y + barrelEnd.forward.y * 100f,
+                                                                                                   barrelEnd.position.z + offset.z + barrelEnd.forward.z * 100f)));
+        }
     }
 
     private void Reload()

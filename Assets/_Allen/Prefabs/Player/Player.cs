@@ -19,10 +19,11 @@ public class Player : MonoBehaviour
     [SerializeField] private float brakeTorque;
     [SerializeField] private float downForce;
 
-
     [Space]
 
     [SerializeField] private Hotbar hotbar;
+    [SerializeField] private List<AllottedShell> allottedAmmo = new List<AllottedShell>();
+
 
     [Space]
 
