@@ -7,11 +7,18 @@ using UnityEngine.UI;
 public class Slot : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI keyNumText;
+    [SerializeField] private TextMeshProUGUI ammoCount;
     [SerializeField] private GameObject fade;
 
-    public void Init(string text)
+    public void Init(string keyText, string ammoText)
     {
-        keyNumText.text = text;
+        keyNumText.text = keyText;
+        ammoCount.text = ammoText;
+    }
+
+    public void SetAmmoText(string ammoText) 
+    {
+        ammoCount.text = ammoText;
     }
 
     public void Select()

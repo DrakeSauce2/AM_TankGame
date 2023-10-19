@@ -114,4 +114,6 @@ public class Cannon : MonoBehaviour
 
     }
 
+    public bool IsReloading { get {  return isReloading; } }
+
 }

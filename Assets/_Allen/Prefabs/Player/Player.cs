@@ -22,8 +22,8 @@ public class Player : MonoBehaviour
     [Space]
 
     [SerializeField] private Hotbar hotbar;
-    [SerializeField] private List<AllottedShell> allottedAmmo = new List<AllottedShell>();
-
+    [SerializeField] private List<AllottedShell> allottedShells = new List<AllottedShell>();
+    private int ammo;
 
     [Space]
 
@@ -52,6 +52,8 @@ public class Player : MonoBehaviour
 
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Confined;
+
+        ammo = allottedShells[hotbar.Index].ammo;
 
         //SetArmorOwner();
         leftTrack.SetAcceleration(tankAcceleration);
@@ -104,23 +106,31 @@ public class Player : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            hotbar.SelectSlot(1);
+            ProcessSwitch(1);
         }
 
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-            hotbar.SelectSlot(2);
+            ProcessSwitch(2);
         }
 
         if (Input.GetKeyDown(KeyCode.Alpha3))
         {
-            hotbar.SelectSlot(3);
+            ProcessSwitch(3);
         }
 
         if (Input.GetKeyDown(KeyCode.Alpha4))
         {
-            hotbar.SelectSlot(4);
+            ProcessSwitch(4);
         }
+    }
+
+    private void ProcessSwitch(int index)
+    {
+        hotbar.SelectSlot(index);
+        cannon.SwitchSelectedShell(allottedShells[index - 1].shell);
+        ammo = allottedShells[hotbar.Index].ammo;
+        hotbar.SetAmmoText(ammo.ToString());
     }
 
     private void FireMainGun()
@@ -131,9 +141,11 @@ public class Player : MonoBehaviour
             return;
         }
 
-        if (Input.GetKeyDown(KeyCode.Mouse0))
+        if (Input.GetKeyDown(KeyCode.Mouse0) && !cannon.IsReloading && ammo > 0)
         {
             cannon.Shoot();
+            allottedShells[hotbar.Index].RemoveAmmo();
+            hotbar.SetAmmoText(ammo.ToString());
         }
 
     }
@@ -143,25 +155,6 @@ public class Player : MonoBehaviour
         if (Input.GetKey(KeyCode.Space))
         {
             machineGun.Shoot();
-        }
-    }
-
-    private void Move()
-    {
-        float speed = moveSpeed * 10f;
-        Vector3 inputDir = GetInputDirection();
-        inputDir = inputDir.normalized;
-        if (inputDir.magnitude != 0 )
-        {
-            //rBody.AddForce((transform.forward * inputDir.z + transform.right * inputDir.x) * Time.fixedDeltaTime * speed);
-            rBody.AddForce(transform.forward * Time.deltaTime * GetInputDirection().z * speed);
-            rBody.velocity = Vector3.ClampMagnitude(rBody.velocity, maxSpeed);
-        }
-
-        if(inputDir.x != 0)
-        {
-            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(
-            transform.right * inputDir.x * turnSpeed, transform.up), 1 * Time.deltaTime);
         }
     }
 
@@ -194,11 +187,6 @@ public class Player : MonoBehaviour
             rightTrack.Brake(0);
         }
 
-    }
-
-    private Vector3 GetInputDirection()
-    {
-        return new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
     }
 
 }

@@ -19,14 +19,18 @@ public class Hotbar : MonoBehaviour
         {
             selectedIndex = value;
         }
+    }
 
+    public void SetAmmoText(string ammoText)
+    {
+        spawnedSlots[Index].GetComponent<Slot>().SetAmmoText(ammoText);
     }
 
     private void Awake()
     {
         for (int i = 0; i < slots.Count; i++)
         {
-            slots[i].GetComponent<Slot>().Init((i + 1).ToString());
+            slots[i].GetComponent<Slot>().Init((i + 1).ToString(), "");
             spawnedSlots.Add(Instantiate(slots[i], transform));
         }
         
