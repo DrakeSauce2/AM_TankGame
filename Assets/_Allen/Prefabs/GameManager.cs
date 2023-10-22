@@ -35,10 +35,21 @@ public class GameManager : MonoBehaviour
     [Header("Selection Screen")]
     [SerializeField] private GameObject selectionScreen;
 
+    [Header("Test Buttons")]
+    [SerializeField] private Button spawnEnemy;
 
     private void Awake()
     {
         if(Instance == null) Instance = this;
         else Destroy(this);
     }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+
+        }
+    }
+
 }

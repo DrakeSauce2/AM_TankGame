@@ -49,6 +49,11 @@ public class Player : MonoBehaviour
 
     [SerializeField] private List<Armor> armorPlates = new List<Armor>();
 
+    [Space]
+
+    [SerializeField] private AudioSource engineAudio;
+    [SerializeField] private float engineAudioSmoothing;
+
     private Rigidbody rBody;
 
     /// 
@@ -57,7 +62,7 @@ public class Player : MonoBehaviour
 
     //List<AllottedShell> allottedShells
 
-    public void Init(List<GameObject> allottedShellObjs)
+    public void Init(List<AllottedShell> allottedShells)
     {
         rBody = GetComponent<Rigidbody>();
 
@@ -66,17 +71,7 @@ public class Player : MonoBehaviour
 
         cannon.Init(GameManager.Instance.ReloadReticle, GameManager.Instance.ReloadFill);
 
-        //this.allottedShells = allottedShells;
-
-        for (int i = 0; i < allottedShellObjs.Count; i++)
-        {
-            AllottedShell shell = allottedShellObjs[i].GetComponent<AllottedShell>();
-            allottedShells.Add(shell);
-
-            //allottedShells[i].SetAmmo(allottedShellObjs[i].GetComponent<SelectionScreenSlot>().GetAmmoCount());
-
-            Debug.Log($"Alloted Shell {i} Ammo : {allottedShells[i].ammo}");
-        }
+        this.allottedShells = allottedShells;
 
         InitializeHotBar();
 
@@ -138,10 +133,15 @@ public class Player : MonoBehaviour
 
     #endregion
 
+    float refSpeed = 0;
     private void Update()
     {       
         FireMainGun();
         FireMachineGun();
+
+        Vector3 input = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+        float speed = Mathf.Clamp(input.magnitude, -1f, 1.25f);
+        engineAudio.pitch = Mathf.SmoothDamp(engineAudio.pitch, speed, ref refSpeed, engineAudioSmoothing);
 
         SwitchAmmo();
     }
@@ -183,7 +183,7 @@ public class Player : MonoBehaviour
 
     private void ProcessSwitch(int index)
     {
-        if (index >= allottedShells.Count) return;
+        if (index > allottedShells.Count) return;
 
         hotbar.SelectSlot(index);
         cannon.SwitchSelectedShell(allottedShells[index - 1].shell);

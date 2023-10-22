@@ -35,7 +35,7 @@ public class SelectionScreen : MonoBehaviour
         //shells = GetAllotedShells(spawnedVehicleAmmunitionSlots);
 
         //player.GetComponent<Player>().Init(shells);
-        player.GetComponent<Player>().Init(spawnedVehicleAmmunitionSlots);
+        player.GetComponent<Player>().Init(GetAllotedShells(spawnedVehicleAmmunitionSlots));
 
         gameObject.SetActive(false);
     }
