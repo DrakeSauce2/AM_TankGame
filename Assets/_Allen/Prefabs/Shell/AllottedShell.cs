@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class AllottedShell : MonoBehaviour
 {
-    [SerializeField] private Shell mShell;
+    [SerializeField] private GameObject mShell;
     [SerializeField] private int mAmmoCount;
     [Space]
     [SerializeField] private GameObject htbSlot;
@@ -35,7 +35,7 @@ public class AllottedShell : MonoBehaviour
         mAmmoCount--;
     }
 
-    public Shell shell
+    public GameObject shell
     {
         get
         {

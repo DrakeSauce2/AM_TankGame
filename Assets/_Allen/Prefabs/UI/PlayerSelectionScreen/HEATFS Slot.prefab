@@ -779,7 +779,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f62bebe184de8ca4f8259c99326576f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mShell: {fileID: 8050959182977717926, guid: cca20b7575ce86b4999529b57e6c59db, type: 3}
+  mShell: {fileID: 7967954056359938758, guid: cca20b7575ce86b4999529b57e6c59db, type: 3}
   mAmmoCount: 0
   htbSlot: {fileID: 6495736366764851619, guid: 9bf0c4376b398904fb7cedff821cbad9, type: 3}
 --- !u!1 &5991391922983567497

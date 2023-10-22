@@ -4479,6 +4479,7 @@ MonoBehaviour:
   tankAcceleration: 100
   brakeTorque: 100
   downForce: 100
+  allottedShells: []
   cannon: {fileID: 7853939892623531777}
   machineGun: {fileID: 3363258631918861687}
   healthBarPrefab: {fileID: 8080285601600323564, guid: 05ac5e88b9937de4bb62380762197788,
@@ -4499,11 +4500,9 @@ MonoBehaviour:
   barrelEnd: {fileID: 3298052457109725732}
   shotParticle: {fileID: 2082130207912471678}
   shotSound: {fileID: 8741874154849937177}
-  reloadReticle: {fileID: 0}
-  reloadFill: {fileID: 0}
   reloadTime: 5
-  shellPrefab: {fileID: 7967954056359938758, guid: 6e3c2eda37459b848b66078985b53a59,
-    type: 3}
+  shellPrefab: {fileID: 0}
+  shell: {fileID: 0}
   offset: {x: 0, y: 0, z: 0}
   layerMask:
     serializedVersion: 2
@@ -4523,11 +4522,10 @@ MonoBehaviour:
   barrelEnd: {fileID: 8332306183451318342}
   shotParticle: {fileID: 7045172653125535023}
   shotSound: {fileID: 4924486156791207754}
-  reloadReticle: {fileID: 0}
-  reloadFill: {fileID: 0}
   reloadTime: 0.1
   shellPrefab: {fileID: 7967954056359938758, guid: ec0585136891b9d4d9fd1fdc838c3a24,
     type: 3}
+  shell: {fileID: 0}
   offset: {x: 0, y: 0, z: 0}
   layerMask:
     serializedVersion: 2

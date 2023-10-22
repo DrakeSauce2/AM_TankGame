@@ -21,6 +21,7 @@ public class Cannon : MonoBehaviour
     [Space]
    
     [SerializeField] private GameObject shellPrefab;
+    [SerializeField] private Shell shell;
 
     [Space]
 
@@ -28,11 +29,9 @@ public class Cannon : MonoBehaviour
     [SerializeField] private LayerMask layerMask;
 
     private TargetGuide guide;
-    private Shell shell;
 
     private void Awake()
     {
-        shell = shellPrefab.GetComponent<Shell>();
         guide = GetComponent<TargetGuide>();
 
         currentReloadTime = reloadTime + 1;
@@ -67,9 +66,10 @@ public class Cannon : MonoBehaviour
         shotParticle.Play();
     }
 
-    public void SwitchSelectedShell(Shell newShell)
+    public void SwitchSelectedShell(GameObject newShell)
     {
-        shell = newShell;
+        shellPrefab = newShell;
+        shell = newShell.GetComponent<Shell>();
         currentReloadTime = 0;
     }
 
