@@ -6,6 +6,8 @@ public class AllottedShell : MonoBehaviour
 {
     [SerializeField] private Shell mShell;
     [SerializeField] private int mAmmoCount;
+    [Space]
+    [SerializeField] private GameObject htbSlot;
 
     public int ammo
     {
@@ -13,7 +15,12 @@ public class AllottedShell : MonoBehaviour
         {
             return mAmmoCount;
         }
-    } 
+    }
+
+    public GameObject hotbarSlot
+    {
+        get { return htbSlot; }
+    }
 
     // Only Call Once for each respawn
     public void SetAmmo(int value)

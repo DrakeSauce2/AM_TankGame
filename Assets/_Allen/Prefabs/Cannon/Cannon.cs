@@ -12,8 +12,8 @@ public class Cannon : MonoBehaviour
 
     [Space]
 
-    [SerializeField] private GameObject reloadReticle;
-    [SerializeField] private Image reloadFill;
+    private GameObject reloadReticle;
+    private Image reloadFill;
     [SerializeField] private float reloadTime;
     private float currentReloadTime = 0;
     bool isReloading = false;
@@ -36,6 +36,12 @@ public class Cannon : MonoBehaviour
         guide = GetComponent<TargetGuide>();
 
         currentReloadTime = reloadTime + 1;
+    }
+
+    public void Init(GameObject reticle, Image fill)
+    {
+        reloadReticle = reticle;
+        reloadFill = fill;
     }
 
     private void Update()

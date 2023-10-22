@@ -15,14 +15,14 @@ public class CameraRig : MonoBehaviour
     public static CameraRig Instance;
 
     [SerializeField] private Camera thirdPersonCam;
-    [SerializeField] private Camera firstPersonCam;
-    [SerializeField] private GameObject fpsViewShroud;
+    private Camera firstPersonCam;
+    private GameObject fpsViewShroud;
     [SerializeField] private float xSense;
     private TankViewState tankViewState = TankViewState.ThirdPersonView;
 
     [Space]
 
-    [SerializeField] private Transform followTarget;
+    private Transform followTarget;
     private Vector3 cameraFollowVelocity = Vector3.zero;
     [SerializeField] private float followSpeed = 0.2f;
     [SerializeField] private LayerMask layerMask;
@@ -30,8 +30,8 @@ public class CameraRig : MonoBehaviour
     [Space]
 
     [SerializeField] private Transform camPivot;
-    [SerializeField] private Transform tankHead;
-    [SerializeField] private Transform tankBarrel;
+    private Transform tankHead;
+    private Transform tankBarrel;
     [SerializeField] private Vector3 offset;
     [SerializeField] private float headTurnSpeed;
 
@@ -51,6 +51,19 @@ public class CameraRig : MonoBehaviour
     {
         if (Instance == null) Instance = this;
         else Destroy(Instance);
+    }
+
+    public void Init(Camera camera)
+    {
+        firstPersonCam = camera;
+        fpsViewShroud = GameManager.Instance.BarrelShroud;
+    }
+
+    public void AddTankFollow(Transform followTransform, Transform head, Transform barrel)
+    {
+        followTarget = followTransform;
+        tankHead = head;
+        tankBarrel = barrel;
     }
 
     public Camera GetActiveCamera()

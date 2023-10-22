@@ -680,7 +680,7 @@ GameObject:
   - component: {fileID: -6254835278971676776}
   - component: {fileID: 1398176079451693126}
   m_Layer: 5
-  m_Name: AmmoSlot
+  m_Name: APFSDS Slot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -762,8 +762,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ammoSlider: {fileID: 6226619042839471395}
+  ammoText: {fileID: 5135775840474827257}
   ammoCount: 0
-  minAmmo: 0
   maxAmmo: 42
 --- !u!114 &1398176079451693126
 MonoBehaviour:
@@ -777,9 +777,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f62bebe184de8ca4f8259c99326576f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mShell: {fileID: 0}
+  mShell: {fileID: 8050959182977717926, guid: 183119329489632458c68b7d4733f755, type: 3}
   mAmmoCount: 0
-  htbSlot: {fileID: 0}
+  htbSlot: {fileID: 6495736366764851619, guid: dbab023797850b5468bb6219737b9b33, type: 3}
 --- !u!1 &5991391922983567497
 GameObject:
   m_ObjectHideFlags: 0

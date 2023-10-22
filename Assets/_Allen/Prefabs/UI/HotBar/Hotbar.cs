@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class Hotbar : MonoBehaviour
 {
-    [SerializeField] private List<GameObject> slots = new List<GameObject>();
-
+    private List<GameObject> slots = new List<GameObject>();
     private List<GameObject> spawnedSlots = new List<GameObject>();
-    private int selectedIndex;
+
+    private int selectedIndex = 0;
 
     public int Index
     {
@@ -26,23 +26,24 @@ public class Hotbar : MonoBehaviour
         spawnedSlots[Index].GetComponent<Slot>().SetAmmoText(ammoText);
     }
 
-    private void Awake()
+    public void Init(List<AllottedShell> allottedShells)
     {
         for (int i = 0; i < slots.Count; i++)
         {
-            slots[i].GetComponent<Slot>().Init((i + 1).ToString(), "");
+            slots[i].GetComponent<Slot>().Init((i + 1).ToString(), $"{allottedShells[i].ammo}");
             spawnedSlots.Add(Instantiate(slots[i], transform));
-        }
-        
+        }      
+
         SelectSlot(1);
     }    
 
     public void SelectSlot(int index)
     {
-        Index = index;
+        Index = index - 1;
+
         for(int i = 0; i < slots.Count; i++)
         {
-            if (i == index - 1)
+            if (i == Index)
             {
                 spawnedSlots[i].GetComponent<Slot>().Select();
             }
@@ -51,6 +52,11 @@ public class Hotbar : MonoBehaviour
                 spawnedSlots[i].GetComponent<Slot>().Deselect();
             }
         }
+    }
+
+    public void InitializeSlots(List<GameObject> slotsToAdd)
+    {
+        slots = slotsToAdd;
     }
 
 }

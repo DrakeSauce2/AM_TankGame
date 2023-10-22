@@ -7,6 +7,16 @@ using static HealthComponent;
 
 public class Player : MonoBehaviour
 {
+    [SerializeField] private Camera fpsCamera;
+
+    [Space]
+
+    [SerializeField] Transform cameraPivot;
+    [SerializeField] Transform tankHead;
+    [SerializeField] Transform tankBarrel;
+
+    [Space]
+
     [SerializeField] private float moveSpeed = 10f;
     [SerializeField] private float maxSpeed;
     [SerializeField] private float turnSpeed;
@@ -21,7 +31,7 @@ public class Player : MonoBehaviour
 
     [Space]
 
-    [SerializeField] private Hotbar hotbar;
+    private Hotbar hotbar;
     [SerializeField] private List<AllottedShell> allottedShells = new List<AllottedShell>();
     private int ammo;
 
@@ -41,9 +51,34 @@ public class Player : MonoBehaviour
 
     private Rigidbody rBody;
 
-    private void Awake()
+    /// 
+    /// Player Needs to make its own hotbar and cameraRig
+    /// 
+
+    //List<AllottedShell> allottedShells
+
+    public void Init(List<GameObject> allottedShellObjs)
     {
         rBody = GetComponent<Rigidbody>();
+
+        CameraRig.Instance.Init(fpsCamera);
+        CameraRig.Instance.AddTankFollow(cameraPivot, tankHead, tankBarrel);
+
+        cannon.Init(GameManager.Instance.ReloadReticle, GameManager.Instance.ReloadFill);
+
+        //this.allottedShells = allottedShells;
+
+        for (int i = 0; i < allottedShellObjs.Count; i++)
+        {
+            AllottedShell shell = allottedShellObjs[i].GetComponent<AllottedShell>();
+            allottedShells.Add(shell);
+
+            //allottedShells[i].SetAmmo(allottedShellObjs[i].GetComponent<SelectionScreenSlot>().GetAmmoCount());
+
+            Debug.Log($"Alloted Shell {i} Ammo : {allottedShells[i].ammo}");
+        }
+
+        InitializeHotBar();
 
         healthComponent = GetComponent<HealthComponent>();
         healthComponent.onTakenDamage += TookDamage;
@@ -53,11 +88,27 @@ public class Player : MonoBehaviour
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Confined;
 
-        ammo = allottedShells[hotbar.Index].ammo;
-
         //SetArmorOwner();
+
         leftTrack.SetAcceleration(tankAcceleration);
         rightTrack.SetAcceleration(tankAcceleration);
+
+        ProcessSwitch(1);
+    }
+
+    private void InitializeHotBar()
+    {
+        hotbar = Instantiate(GameManager.Instance.HotBarPrefab, GameManager.Instance.HotBarAttachPoint).GetComponent<Hotbar>();
+
+        List<GameObject> tempHotBarSlots = new List<GameObject>();
+        foreach (AllottedShell slotToAdd in allottedShells)
+        {
+            tempHotBarSlots.Add(slotToAdd.hotbarSlot);
+        }
+
+        hotbar.InitializeSlots(tempHotBarSlots);
+
+        hotbar.Init(allottedShells);
     }
 
     private void SetArmorOwner()
@@ -123,13 +174,20 @@ public class Player : MonoBehaviour
         {
             ProcessSwitch(4);
         }
+
+        if (Input.GetKeyDown(KeyCode.Alpha5))
+        {
+            ProcessSwitch(5);
+        }
     }
 
     private void ProcessSwitch(int index)
     {
+        if (index >= allottedShells.Count) return;
+
         hotbar.SelectSlot(index);
         cannon.SwitchSelectedShell(allottedShells[index - 1].shell);
-        ammo = allottedShells[hotbar.Index].ammo;
+        ammo = allottedShells[index - 1].ammo;
         hotbar.SetAmmoText(ammo.ToString());
     }
 
@@ -145,6 +203,7 @@ public class Player : MonoBehaviour
         {
             cannon.Shoot();
             allottedShells[hotbar.Index].RemoveAmmo();
+            ammo = allottedShells[hotbar.Index].ammo;
             hotbar.SetAmmoText(ammo.ToString());
         }
 

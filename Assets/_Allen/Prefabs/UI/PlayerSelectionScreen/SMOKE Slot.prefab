@@ -101,7 +101,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 8d90677d5c3ad1f47a34a779dcdcf128, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 935efcb8c8c87964f988c7354c117e36, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -176,7 +176,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 3VBM13/3BM32/33
+  m_text: SMOKE
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -680,7 +680,7 @@ GameObject:
   - component: {fileID: -6254835278971676776}
   - component: {fileID: 1398176079451693126}
   m_Layer: 5
-  m_Name: AmmoSlot
+  m_Name: SMOKE Slot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -762,8 +762,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ammoSlider: {fileID: 6226619042839471395}
+  ammoText: {fileID: 5135775840474827257}
   ammoCount: 0
-  minAmmo: 0
   maxAmmo: 42
 --- !u!114 &1398176079451693126
 MonoBehaviour:
@@ -777,9 +777,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f62bebe184de8ca4f8259c99326576f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mShell: {fileID: 0}
+  mShell: {fileID: 8050959182977717926, guid: 6e3c2eda37459b848b66078985b53a59, type: 3}
   mAmmoCount: 0
-  htbSlot: {fileID: 0}
+  htbSlot: {fileID: 6495736366764851619, guid: cfbbb9a83da0d1e458d6d21775f994b2, type: 3}
 --- !u!1 &5991391922983567497
 GameObject:
   m_ObjectHideFlags: 0

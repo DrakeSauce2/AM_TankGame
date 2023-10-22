@@ -25,7 +25,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 725255383499453270}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 19.13, y: 4, z: 8.55}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -45,7 +45,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a7dcc9f20c9219242bc38cc6b600520b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  followTarget: {fileID: 0}
+  thirdPersonCam: {fileID: 4435130383157253057}
+  firstPersonCam: {fileID: 0}
+  fpsViewShroud: {fileID: 0}
+  xSense: 0.3
+  followTarget: {fileID: 8223616169267672921, guid: 690f4d522aad757488b2e1fbc3248ef1,
+    type: 3}
   followSpeed: 0.2
   layerMask:
     serializedVersion: 2
@@ -53,9 +58,9 @@ MonoBehaviour:
   camPivot: {fileID: 3160137228316530751}
   tankHead: {fileID: 0}
   tankBarrel: {fileID: 0}
-  offset: {x: 0, y: 2, z: 0}
+  offset: {x: 0, y: 0, z: 0}
+  headTurnSpeed: 5
   cameraSpeed: 2
-  headSpeed: 1
   zoomSpeed: 7
 --- !u!1 &2180064337444644818
 GameObject:
@@ -70,7 +75,7 @@ GameObject:
   - component: {fileID: 588149229995800510}
   - component: {fileID: 1223229940296630179}
   m_Layer: 0
-  m_Name: Main Camera
+  m_Name: ThirdPersonCamera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -100,7 +105,7 @@ Camera:
   m_GameObject: {fileID: 2180064337444644818}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 1
+  m_ClearFlags: 2
   m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2

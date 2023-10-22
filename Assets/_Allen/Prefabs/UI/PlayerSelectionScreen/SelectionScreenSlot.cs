@@ -8,24 +8,29 @@ using UnityEngine.UI;
 public class SelectionScreenSlot : MonoBehaviour
 {
     [SerializeField] private Slider ammoSlider;
+    [SerializeField] private TextMeshProUGUI ammoText;
     [Space]
     [SerializeField] private int ammoCount;
-    [SerializeField] private int minAmmo, maxAmmo;
+    [SerializeField] private int maxAmmo;
+    private AllottedShell allottedShell;
 
     private void Awake()
     {
-        ammoSlider.minValue = minAmmo;
+        allottedShell = GetComponent<AllottedShell>();
+        ammoSlider.minValue = 0;
         ammoSlider.maxValue = maxAmmo;
     }
 
     private void Update()
     {
         ammoCount = Mathf.RoundToInt(ammoSlider.value);
+        ammoText.text = $"{ammoCount} / {maxAmmo}";
+        allottedShell.SetAmmo(ammoCount);
     }
 
-    public void PushAmmo()
+    public int GetAmmoCount()
     {
-        // Set ammo in player and hotbar
+        return ammoCount;
     }
 
 }
