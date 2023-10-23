@@ -22,8 +22,15 @@ public class Enemy : MonoBehaviour
     [SerializeField] private TextMeshProUGUI damageText;
     private Animator damageAnim;
 
+    
+
+    private MinimapFollowTarget minimapFollowTarget;
+
     private void Awake()
     {
+        minimapFollowTarget = GetComponent<MinimapFollowTarget>();
+        minimapFollowTarget.Init(transform);
+
         healthComponent = GetComponent<HealthComponent>();
         healthComponent.onTakenDamage += TookDamage;
         healthComponent.onHealthEmpty += StartDeath;
@@ -64,7 +71,13 @@ public class Enemy : MonoBehaviour
 
     private void StartDeath(float delta, float maxHealth)
     {
-        
+        minimapFollowTarget.Deconstruct();
+
+        Instantiate(GameManager.Instance.DeadTankPrefab, transform.position, transform.rotation);
+
+        Destroy(healthBar.gameObject);
+        Destroy(damageText);
+        Destroy(gameObject);
     }
 
     private void TookDamage(float currentHealth, float delta, float maxHealth)

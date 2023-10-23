@@ -54,6 +54,7 @@ public class Player : MonoBehaviour
     [SerializeField] private AudioSource engineAudio;
     [SerializeField] private float engineAudioSmoothing;
 
+    private MinimapFollowTarget minimapFollowTarget;
     private Rigidbody rBody;
 
     /// 
@@ -65,6 +66,9 @@ public class Player : MonoBehaviour
     public void Init(List<AllottedShell> allottedShells)
     {
         rBody = GetComponent<Rigidbody>();
+
+        minimapFollowTarget = GetComponent<MinimapFollowTarget>();
+        minimapFollowTarget.Init(transform);
 
         CameraRig.Instance.Init(fpsCamera);
         CameraRig.Instance.AddTankFollow(cameraPivot, tankHead, tankBarrel);
@@ -123,7 +127,7 @@ public class Player : MonoBehaviour
 
     private void StartDeath(float delta, float maxHealth)
     {
-        
+        minimapFollowTarget.Deconstruct();
     }
 
     private void TookDamage(float currentHealth, float delta, float maxHealth)
@@ -139,11 +143,16 @@ public class Player : MonoBehaviour
         FireMainGun();
         FireMachineGun();
 
+        PitchEngineAudio();
+
+        SwitchAmmo();
+    }
+
+    private void PitchEngineAudio()
+    {
         Vector3 input = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
         float speed = Mathf.Clamp(input.magnitude, -1f, 1.25f);
         engineAudio.pitch = Mathf.SmoothDamp(engineAudio.pitch, speed, ref refSpeed, engineAudioSmoothing);
-
-        SwitchAmmo();
     }
 
     private void FixedUpdate()

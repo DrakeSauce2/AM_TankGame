@@ -38,6 +38,11 @@ public class GameManager : MonoBehaviour
     [Header("Test Buttons")]
     [SerializeField] private Button spawnEnemy;
 
+    [Header("Death Model")]
+
+    [SerializeField] private GameObject deadTankPrefab;
+    public GameObject DeadTankPrefab { get { return deadTankPrefab; } }
+
     private void Awake()
     {
         if(Instance == null) Instance = this;
