@@ -162,7 +162,7 @@ MonoBehaviour:
   mPen: 335
   mRicochetAngle: 70
   blastRadius: 5
-  blastDamage: 2000
+  blastDamage: 10000
   blastPenetration: 100
   impactParticle: {fileID: 19800008, guid: 1dbc518224e49f34095aab42fe05751a, type: 3}
   shellType: 1

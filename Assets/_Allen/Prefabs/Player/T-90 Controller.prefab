@@ -4912,6 +4912,7 @@ MonoBehaviour:
   allottedShells: []
   cannon: {fileID: 7853939892623531777}
   machineGun: {fileID: 3363258631918861687}
+  shotForce: 10000
   healthBarPrefab: {fileID: 8080285601600323564, guid: 05ac5e88b9937de4bb62380762197788,
     type: 3}
   armorPlates:
