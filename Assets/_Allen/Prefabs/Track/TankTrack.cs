@@ -11,6 +11,8 @@ public class TankTrack : MonoBehaviour
     private Vector3 wheelPosition;
     private Quaternion wheelRotation;
 
+    private bool isDestroyed = false;
+
     private void Update()
     {
         for (int i = 0; i < wheels.Length; i++)
@@ -22,6 +24,24 @@ public class TankTrack : MonoBehaviour
         }
     }
 
+    private void OnDisable()
+    {
+        isDestroyed = true;
+        foreach (WheelCollider wheel in wheels)
+        {
+            wheel.wheelDampingRate = 100000f;
+        }
+    }
+
+    private void OnEnable()
+    {
+        isDestroyed = false;
+        foreach (WheelCollider wheel in wheels)
+        {
+            wheel.wheelDampingRate = 10f;
+        }
+    }
+
     public void SetAcceleration(float accel)
     {
         acceleration = accel;
@@ -29,6 +49,8 @@ public class TankTrack : MonoBehaviour
 
     public void Accelerate(int dir)
     {
+        if (isDestroyed == true) return;
+
         foreach (WheelCollider wheel in wheels)
         {
             wheel.motorTorque = acceleration * dir;
@@ -37,6 +59,8 @@ public class TankTrack : MonoBehaviour
 
     public void Brake(float brakeTorque)
     {
+        if (isDestroyed == true) return;
+
         foreach (WheelCollider wheel in wheels)
         {
             wheel.brakeTorque = brakeTorque;

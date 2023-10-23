@@ -17,7 +17,6 @@ public class Player : MonoBehaviour
 
     [Space]
 
-    [SerializeField] private float moveSpeed = 10f;
     [SerializeField] private float maxSpeed;
     [SerializeField] private float turnSpeed;
 
@@ -39,6 +38,7 @@ public class Player : MonoBehaviour
 
     [SerializeField] private Cannon cannon;
     [SerializeField] private Cannon machineGun;
+    [SerializeField] private float shotForce;
 
     [Space]
 
@@ -48,6 +48,9 @@ public class Player : MonoBehaviour
     [Space]
 
     [SerializeField] private List<Armor> armorPlates = new List<Armor>();
+    [SerializeField] private List<TankComponent> components = new List<TankComponent>();
+    [SerializeField] private float repairTime;
+    [SerializeField] private bool isRepairing = false;
 
     [Space]
 
@@ -57,11 +60,7 @@ public class Player : MonoBehaviour
     private MinimapFollowTarget minimapFollowTarget;
     private Rigidbody rBody;
 
-    /// 
-    /// Player Needs to make its own hotbar and cameraRig
-    /// 
-
-    //List<AllottedShell> allottedShells
+    private IEnumerator repairCoroutine;
 
     public void Init(List<AllottedShell> allottedShells)
     {
@@ -87,10 +86,14 @@ public class Player : MonoBehaviour
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Confined;
 
-        //SetArmorOwner();
+        SetArmorOwner();
+        SetComponentOwner();
+        GameManager.Instance.SetPlayerTankComponents(components);
 
         leftTrack.SetAcceleration(tankAcceleration);
         rightTrack.SetAcceleration(tankAcceleration);
+
+        repairCoroutine = StartRepair();
 
         ProcessSwitch(1);
     }
@@ -118,6 +121,14 @@ public class Player : MonoBehaviour
         }
     }
 
+    private void SetComponentOwner()
+    {
+        foreach (TankComponent component in components)
+        {
+            component.Init(gameObject);
+        }
+    }   
+
     #region Health Events
 
     private void HealthChanged(float currentHealth, float delta, float maxHealth)
@@ -139,8 +150,10 @@ public class Player : MonoBehaviour
 
     float refSpeed = 0;
     private void Update()
-    {       
-        FireMainGun();
+    {
+        CheckRepair();
+
+        FireMainGun();       
         FireMachineGun();
 
         PitchEngineAudio();
@@ -148,16 +161,58 @@ public class Player : MonoBehaviour
         SwitchAmmo();
     }
 
+    private void CheckRepair()
+    {
+        // Do the hold F to start repair thing
+        if(Input.GetKeyDown(KeyCode.F))
+        {
+            if (!isRepairing)
+            {
+                repairCoroutine = StartRepair();
+                StartCoroutine(repairCoroutine);
+            }
+            else if (isRepairing)
+            {
+                StopCoroutine(repairCoroutine);
+                isRepairing = false;
+                GameManager.Instance.Reparing(false);
+            }
+        }
+    }
+
+    private IEnumerator StartRepair()
+    {
+        isRepairing = true;
+        float time = repairTime;
+        GameManager.Instance.Reparing(true);
+
+        yield return new WaitForSeconds(time);
+
+        foreach (TankComponent component in components)
+        {
+            if (!component.IsDestroyed) continue;
+
+            component.Repair();
+        }
+
+        GameManager.Instance.Reparing(false);
+        isRepairing = false;
+    }
+
     private void PitchEngineAudio()
     {
         Vector3 input = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+
         float speed = Mathf.Clamp(input.magnitude, -1f, 1.25f);
         engineAudio.pitch = Mathf.SmoothDamp(engineAudio.pitch, speed, ref refSpeed, engineAudioSmoothing);
     }
 
     private void FixedUpdate()
     {
-        NewMove();
+        
+        if(!isRepairing)
+            Move();
+        
 
         rBody.AddForce(-transform.up * downForce);
     }
@@ -211,6 +266,9 @@ public class Player : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Mouse0) && !cannon.IsReloading && ammo > 0)
         {
             cannon.Shoot();
+
+            rBody.AddForceAtPosition(-cannon.BarrelEnd.forward * shotForce, cannon.BarrelEnd.position);
+
             allottedShells[hotbar.Index].RemoveAmmo();
             ammo = allottedShells[hotbar.Index].ammo;
             hotbar.SetAmmoText(ammo.ToString());
@@ -220,13 +278,15 @@ public class Player : MonoBehaviour
 
     private void FireMachineGun()
     {
+        if (machineGun == null) return;
+
         if (Input.GetKey(KeyCode.Space))
         {
-            machineGun.Shoot();
+            machineGun.Shoot();         
         }
     }
 
-    private void NewMove()
+    private void Move()
     {
         int forward = Mathf.RoundToInt(Input.GetAxis("Vertical"));
         int horizontal = Mathf.RoundToInt(Input.GetAxis("Horizontal"));
@@ -236,7 +296,6 @@ public class Player : MonoBehaviour
         leftTrack.Accelerate(forward);
         rightTrack.Accelerate(forward);
 
-        float turn = forward != 0 ? turnSpeed : turnSpeed / 4;
         rBody.AddRelativeTorque(Vector3.up * horizontal * turnSpeed * Time.fixedDeltaTime, ForceMode.Acceleration);
 
         rBody.velocity = Vector3.ClampMagnitude(rBody.velocity, maxSpeed);

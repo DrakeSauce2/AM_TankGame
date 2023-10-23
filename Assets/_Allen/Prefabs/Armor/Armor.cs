@@ -9,8 +9,8 @@ public class Armor : MonoBehaviour
 
     [Space]
 
-    [SerializeField] [Range(0, 100)] private float keResistance;
-    [SerializeField] [Range(0, 100)] private float heResistance;
+    [SerializeField] [Range(0, 1)] private float keResistance;
+    [SerializeField] [Range(0, 1)] private float heResistance;
     private float angle;
 
     private HealthComponent ownerHealthComponent;
@@ -40,8 +40,15 @@ public class Armor : MonoBehaviour
         ownerHealthComponent = owner.GetComponent<HealthComponent>();
     }
 
-    public void CalculateDamage(Transform incomingObject, float damage)
+    public void CalculateDamage(Transform incomingObject, float damage, bool isKinetic)
     {
+        if (isKinetic)
+            damage -= damage * keResistance;
+        else 
+            damage -= damage * heResistance;
+
+        Debug.Log(damage);
+
         ownerHealthComponent.ChangeHealth(-damage);
         //Owner.GetComponent<HealthComponent>().ChangeHealth(-10);
         Debug.Log("Object Hit");

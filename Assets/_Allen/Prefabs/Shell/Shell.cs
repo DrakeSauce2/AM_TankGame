@@ -130,50 +130,71 @@ public class Shell : MonoBehaviour
         foreach (Collider collider in colsInBlast)
         {
             Armor armor = collider.gameObject.GetComponent<Armor>();
-            if (armor == null) continue;
+            TankComponent component = collider.gameObject.GetComponent<TankComponent>();
 
-            float totalDamage = Mathf.Abs(CalculateEnergyFalloff(endPos, collider.transform.position)) / colsInBlast.Length;
+            if (armor != null)
+            {
+                float totalDamage = Mathf.Abs(CalculateEnergyFalloff(endPos, collider.transform.position)) / colsInBlast.Length;
 
-            collider.gameObject.GetComponent<Armor>().CalculateDamage(transform, totalDamage);
-            cumulativeDamage += totalDamage;
+                collider.gameObject.GetComponent<Armor>().CalculateDamage(transform, totalDamage, false);
+                cumulativeDamage += totalDamage;
+                continue;
+            }
+
+            if (component != null)
+            {
+                float totalDamage = Mathf.Abs(CalculateEnergyFalloff(endPos, collider.transform.position)) / colsInBlast.Length;
+
+                collider.gameObject.GetComponent<TankComponent>().CalculateDamage(totalDamage);
+                cumulativeDamage += totalDamage;
+                continue;
+            }
+
         }
 
         Debug.Log(cumulativeDamage);
     }
 
-    public virtual bool CalculateKineticPenetration(Collision collision)
+    public virtual void CalculateKineticPenetration(Collision collision)
     {
         Armor armor = collision.gameObject.GetComponent<Armor>();
-        if ( armor == null ) return false;
+        TankComponent component = collision.gameObject.GetComponent<TankComponent>();
 
-        // ^ Calculates After Check ^
-
-        float impactAngle = CalculateImpactAngle(collision.contacts[0].normal, transform.position);
-        float effectiveThickness = CalculateArmorThickness(armor, impactAngle);
-
-        Debug.Log($"Impact Angle: {impactAngle}, Effective Thickness: {effectiveThickness}");
-
-        float totalPenetration = CalculateKineticFalloff();
-        Debug.Log(totalPenetration);
-
-        /*
-        if (impactAngle < mRicochetAngle)
+        if (armor != null)
         {
-            // ricochet the shell and do something
-            Debug.Log("Shell Ricochet!");
-            return false;
+
+            // ^ Calculates After Check ^
+
+            float impactAngle = CalculateImpactAngle(collision.contacts[0].normal, transform.position);
+            float effectiveThickness = CalculateArmorThickness(armor, impactAngle);
+
+            Debug.Log($"Impact Angle: {impactAngle}, Effective Thickness: {effectiveThickness}");
+
+            float totalPenetration = CalculateKineticFalloff();
+            Debug.Log(totalPenetration);
+
+            /*
+            if (impactAngle < mRicochetAngle)
+            {
+                // ricochet the shell and do something
+                Debug.Log("Shell Ricochet!");
+                return false;
+            }
+            */
+
+            if (totalPenetration > effectiveThickness)
+            {
+                collision.gameObject.GetComponent<Armor>().CalculateDamage(transform, totalPenetration - effectiveThickness, true);
+            }
+
+            return;
         }
-        */
 
-        if (totalPenetration > effectiveThickness)
+        if (component != null)
         {
-            collision.gameObject.GetComponent<Armor>().CalculateDamage(transform, totalPenetration - effectiveThickness);
-            
-            return true;
-        } 
-        
-        //Should try something else instead of doing this
-        return false;
+            float totalPenetration = CalculateKineticFalloff();
+            collision.gameObject.GetComponent<TankComponent>().CalculateDamage(totalPenetration);
+        }
     }
 
     private float CalculateImpactAngle(Vector3 from, Vector3 to)

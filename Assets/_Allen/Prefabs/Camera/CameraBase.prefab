@@ -46,20 +46,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   thirdPersonCam: {fileID: 4435130383157253057}
-  firstPersonCam: {fileID: 0}
-  fpsViewShroud: {fileID: 0}
   xSense: 0.3
-  followTarget: {fileID: 8223616169267672921, guid: 690f4d522aad757488b2e1fbc3248ef1,
-    type: 3}
   followSpeed: 0.2
   layerMask:
     serializedVersion: 2
     m_Bits: 55
   camPivot: {fileID: 3160137228316530751}
-  tankHead: {fileID: 0}
-  tankBarrel: {fileID: 0}
   offset: {x: 0, y: 0, z: 0}
-  headTurnSpeed: 5
+  headTurnSpeed: 10
   cameraSpeed: 2
   zoomSpeed: 7
 --- !u!1 &2180064337444644818

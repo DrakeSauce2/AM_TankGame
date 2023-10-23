@@ -99,7 +99,9 @@ MonoBehaviour:
   vehicleSlotAttachPoint: {fileID: 5973721429835346853}
   vehicleSlotAmmunitionAttachPoint: {fileID: 967145122396819426}
   vehicleSlots:
-  - {fileID: 2833144002895232311, guid: 5d2fc9db3946e8f4aa44c0a447772872, type: 3}
+  - {fileID: 2833144002895232311, guid: 8286221bc2e50f9419d674a0dece2191, type: 3}
+  - {fileID: 2833144002895232311, guid: 5ae00117ac6ec354b8b801c437b1c58d, type: 3}
+  - {fileID: 2833144002895232311, guid: 5a480d4d303a6f44399a7f0b4c8037e6, type: 3}
   spawnedVehicleSlots: []
   spawnedVehicleAmmunitionSlots: []
   selectedVehicle: {fileID: 0}
@@ -300,7 +302,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 125 mm - Main Gun
+  m_text: Main Gun
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}

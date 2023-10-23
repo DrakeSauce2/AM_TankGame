@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,6 +10,7 @@ public class GameManager : MonoBehaviour
 
     [Header("Player UI")]
     [SerializeField] private GameObject viewShroud;
+    [SerializeField] private GameObject repairingText;
     public GameObject BarrelShroud { get { return viewShroud; } }
     [Space]
     [SerializeField] private GameObject reloadReticle;
@@ -43,6 +45,14 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject deadTankPrefab;
     public GameObject DeadTankPrefab { get { return deadTankPrefab; } }
 
+    [Header("Test Destroy Tank Components")]
+
+    [SerializeField] private List<TankComponent> playerTankComponents = new List<TankComponent>();
+
+    [Header("Test Buttons Screen")]
+    [SerializeField] private GameObject testScreen;
+    bool isOpen = false;
+
     private void Awake()
     {
         if(Instance == null) Instance = this;
@@ -53,8 +63,39 @@ public class GameManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Tab))
         {
-
+            ToggleTestScreen();           
         }
+    }
+
+    private void ToggleTestScreen()
+    {
+        isOpen = !isOpen;
+
+        testScreen.SetActive(isOpen);
+        Cursor.visible = isOpen;
+    }
+
+    public void SetPlayerTankComponents(List<TankComponent> compsToAdd)
+    {
+        playerTankComponents = compsToAdd;
+    }
+
+    public void DestroyTankComponents()
+    {
+        foreach (TankComponent comp in playerTankComponents)
+        {
+            comp.DisableComponent();
+        }
+
+        for (int i = 0; i < playerTankComponents.Count; i++)
+        {
+            playerTankComponents[i].DisableComponent();
+        }
+    }
+
+    public void Reparing(bool state)
+    {
+        repairingText.SetActive(state);
     }
 
 }

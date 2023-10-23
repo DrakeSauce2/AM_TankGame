@@ -168,7 +168,7 @@ public class CameraRig : MonoBehaviour
     Vector3 lookAtPoint;
     private void RotateTankHeadThirdPerson()
     {
-        if (Physics.Raycast(thirdPersonCam.transform.position + offset, thirdPersonCam.transform.forward + offset, out RaycastHit hitInfo, 10000f, layerMask))
+        if (Physics.Raycast(thirdPersonCam.transform.position, thirdPersonCam.transform.forward + offset, out RaycastHit hitInfo, 10000f, layerMask))
         {
             lookAtPoint = hitInfo.point;
         }

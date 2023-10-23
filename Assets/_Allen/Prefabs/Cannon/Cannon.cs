@@ -4,6 +4,7 @@ using UnityEngine.UI;
 public class Cannon : MonoBehaviour
 {
     [SerializeField] private Transform barrelEnd;
+    public Transform BarrelEnd { get { return barrelEnd; } }
     [SerializeField] private ParticleSystem shotParticle;
 
     [Space]
