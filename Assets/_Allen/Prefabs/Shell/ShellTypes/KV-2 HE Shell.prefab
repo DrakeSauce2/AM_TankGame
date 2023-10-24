@@ -164,7 +164,7 @@ MonoBehaviour:
   blastRadius: 5
   blastDamage: 10000
   blastPenetration: 100
-  impactParticle: {fileID: 19800008, guid: 1dbc518224e49f34095aab42fe05751a, type: 3}
+  impactParticle: {fileID: 19800002, guid: 4bf22a1d8d9e7724b9af67921436851d, type: 3}
   shellType: 1
 --- !u!65 &6787622946172138365
 BoxCollider:
